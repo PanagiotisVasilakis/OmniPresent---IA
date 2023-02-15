@@ -27,7 +27,7 @@
     "@awesome-cordova-plugins/native-geocoder": "^6.3.0",
     "@awesome-cordova-plugins/splash-screen": "^6.3.0",
     "@awesome-cordova-plugins/status-bar": "^6.3.0",
-    "@capacitor-community/sqlite": "4.6.2-2",
+    "@capacitor-community/sqlite": "4.6.2-3",
     "@capacitor/android": "4.6.3",
     "@capacitor/app": "4.1.1",
     "@capacitor/core": "^4.6.2",
