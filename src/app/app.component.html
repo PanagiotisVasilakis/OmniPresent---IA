@@ -1,0 +1,21 @@
+<ion-app>
+  
+  <ion-menu contentId="main-content" type="overlay" *ngIf="currentRoute !== '/login'">
+    <ion-content>
+      <ion-list id="inbox-list">
+        <ion-note></ion-note>
+        <ion-menu-toggle auto-hide="false" *ngFor="let pages of Pages; let i = index">
+          <ion-item (click)="activeIndex = i" routerDirection="root" [routerLink]="[pages.url]" lines="none"
+            detail="false" [class.selected]="activeIndex === i">
+            <ion-icon slot="start" [ios]="pages.icon + '-outline'" [md]="pages.icon + '-sharp'"></ion-icon>
+            <ion-label>{{ pages.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content" *ngIf="currentRoute !== '/login'"></div>
+  
+  <ion-router-outlet></ion-router-outlet>
+</ion-app>
