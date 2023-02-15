@@ -186,10 +186,11 @@ export class InsideAppComponent implements OnInit{
     this.lonholder2 = 0.000000;
     // clear input field
     // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-    // const closeButton1 = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-    // for (const button of closeButton1) {
-    //   button.click();
-    // }
+    const closeButton1 = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
+    for (const button of closeButton1) {
+      button.style.display = "none";
+      button.click();
+    }
   }
 
 	logout() {
