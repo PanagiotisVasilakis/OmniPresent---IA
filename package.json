@@ -89,7 +89,7 @@
     "@angular/language-service": "^15.1.5",
     "@capacitor/cli": "^4.6.2",
     "@expo/webpack-config": "^18.0.1",
-    "@ionic/angular-toolkit": "7.0.0",
+    "@ionic/angular-toolkit": "8.0.0",
     "@ionic/lab": "3.2.15",
     "@types/esri-leaflet": "^2.1.9",
     "@types/jasmine": "4.3.1",
