@@ -53,6 +53,7 @@
     "esri-leaflet": "^3.0.10",
     "expo": "^47.0.13",
     "find-babel-config": "^2.0.0",
+    "gradle-upgrade-interactive": "^0.7.4",
     "https-browserify": "^1.0.0",
     "install": "^0.13.0",
     "ionic-native": "^2.9.0",
