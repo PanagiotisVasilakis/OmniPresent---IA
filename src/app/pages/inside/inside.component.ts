@@ -37,7 +37,6 @@ export class InsideAppComponent implements OnInit{
     private authService: AuthService,
    
     ) {
-      // this.input2 = document.getElementById("autocomplete2");
     this.initializeApp();
   }
 

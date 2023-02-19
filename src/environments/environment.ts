@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:4000'
-  // apiKey: 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA'
+  url: 'http://localhost:4000',
+  apiKey: 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA',
 };
 
 /*
@@ -15,4 +15,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+

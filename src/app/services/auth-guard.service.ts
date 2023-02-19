@@ -11,7 +11,6 @@ export class AuthGuardService implements CanActivate {
 	constructor(public auth: AuthService, private router: Router) {}
 
 	canActivate(): Observable<boolean> {
-		//return this.auth.isAuthenticated();
 		return this.auth.isAuthenticated.pipe(
 			filter(val => val !== null), // Filter out initial Behaviour subject value
 			take(1), // Otherwise the Observable doesn't complete!
