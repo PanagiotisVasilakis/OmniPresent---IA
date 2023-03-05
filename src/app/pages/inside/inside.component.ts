@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as L from 'leaflet';
 import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
-import { environment } from 'src/environments/environment';
+import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
 
 
 
@@ -30,15 +30,16 @@ export class InsideAppComponent implements OnInit{
   route: L.Layer | any;
   startL: string;
   endL: string;
-  startLocation: string;
-  endLocation: string;
-  date: Date;
-  routeData = {
-    startLocation: '',
-    endLocation: '',
-    date: new Date()
-  };
-  DBURL = environment.url;
+  routes: any[] = [];
+  // startLocation: string;
+  // endLocation: string;
+  // date: Date;
+  // routeData = {
+  //   startLocation: '',
+  //   endLocation: '',
+  //   date: new Date()
+  // };
+  // DBURL = environment.url;
 
  
   constructor(
@@ -47,6 +48,7 @@ export class InsideAppComponent implements OnInit{
     public http: HttpClient,
     private splashScreen: SplashScreen,
     private authService: AuthService,
+    private sqLiteDatabaseService: SqLiteDatabaseService,
     // private routeService: RouteService
     ) {
     this.initializeApp();
@@ -126,7 +128,7 @@ export class InsideAppComponent implements OnInit{
 
     
     //Navigation
-      const input2 = document.getElementById("autocomplete2");
+      const input2 = document.getElementById("autocomplete2") as HTMLInputElement;
       if (input2) {
         for(let i = 0; i < 2; i++){
           const autocomplete = new GeocoderAutocomplete(
@@ -155,19 +157,31 @@ export class InsideAppComponent implements OnInit{
           // Takes the result that the user selected and displays it in the map
           autocomplete.on('select', (location) => {
             console.log(location);
+
             if(i===0){
               this.latholder1 = location.properties.lat;
               this.lonholder1 = location.properties.lon;
               this.startL = location.properties.name;
-            } else if(i===1){
+
+            } else if(i === 1){
               this.latholder2 = location.properties.lat;
               this.lonholder2 = location.properties.lon;
               this.endL = location.properties.name;
-              this.routeData = {
-                startLocation: this.latholder1 + ',' +this.lonholder1,
-                endLocation: this.latholder2 + ',' +this.lonholder2,
-                date: new Date()
-              };
+
+
+              //SAVE ROUTES BY CLICK
+              // Add this line of code to get a reference to the save button element
+              const saveButton = document.getElementById("saveButton") as HTMLElement;
+              
+              // Add an event listener to the save button that calls the saveRoute function
+              saveButton.addEventListener("click", async () => {
+                const SavedRouteName = this.startL + ' - ' + this.endL;
+                await this.sqLiteDatabaseService.execute(
+                  `INSERT INTO places (name, latitude1, longitude1, latitude2, longitude2)
+                  VALUES (?, ?, ?, ?, ?);`, 
+                  [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
+                );
+              });
             }          
           });
         }
@@ -191,6 +205,13 @@ export class InsideAppComponent implements OnInit{
       this.route.addTo(this.mymap);
     });
   }
+  
+
+  async displayRoutes() {
+
+  }
+  
+  
 
   deleteRoute(){
     if (this.route) {

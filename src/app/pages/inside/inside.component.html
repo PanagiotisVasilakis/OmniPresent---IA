@@ -17,9 +17,12 @@
           <ion-button  (click)="deleteRoute()" id="deleteRoute">
             <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
           </ion-button>
-          <!-- <ion-button (click)="saveRoute()" id="saveRoute">
+          <ion-button class="saveRoute" id="saveButton">
             <ion-icon slot="icon-only" name="save" style="font-size: 90%;"></ion-icon>
-          </ion-button> -->
+          </ion-button>
+          <ion-button (click)="displayRoutes()" >
+            <ion-icon slot="icon-only" name="star" style="font-size: 90%;"></ion-icon>
+          </ion-button>
         </div>
 
         <div id="functionsBar">
