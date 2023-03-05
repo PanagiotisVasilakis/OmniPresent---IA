@@ -3,9 +3,10 @@ import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { AuthService } from 'src/app/services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as L from 'leaflet';
 import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -27,6 +28,17 @@ export class InsideAppComponent implements OnInit{
   url:string;
   input2:HTMLElement | null;
   route: L.Layer | any;
+  startL: string;
+  endL: string;
+  startLocation: string;
+  endLocation: string;
+  date: Date;
+  routeData = {
+    startLocation: '',
+    endLocation: '',
+    date: new Date()
+  };
+  DBURL = environment.url;
 
  
   constructor(
@@ -35,7 +47,7 @@ export class InsideAppComponent implements OnInit{
     public http: HttpClient,
     private splashScreen: SplashScreen,
     private authService: AuthService,
-   
+    // private routeService: RouteService
     ) {
     this.initializeApp();
   }
@@ -79,7 +91,7 @@ export class InsideAppComponent implements OnInit{
     //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
     //const  url = `https://api.geoapify.com/v1/routing?waypoints=${this.fromWaypoint.join(',')}|${this.toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
     //Search and autocomplete in searching results
-    const input1 = document.getElementById("autocomplete1");
+    const input1 = document.getElementById("autocomplete1") as HTMLInputElement;
     if (input1) {
       const autocomplete = new GeocoderAutocomplete(
         input1, 
@@ -144,16 +156,23 @@ export class InsideAppComponent implements OnInit{
           autocomplete.on('select', (location) => {
             console.log(location);
             if(i===0){
-            this.latholder1 = location.properties.lat;
-            this.lonholder1 = location.properties.lon;
+              this.latholder1 = location.properties.lat;
+              this.lonholder1 = location.properties.lon;
+              this.startL = location.properties.name;
             } else if(i===1){
-            this.latholder2 = location.properties.lat;
-            this.lonholder2 = location.properties.lon;
-            }
+              this.latholder2 = location.properties.lat;
+              this.lonholder2 = location.properties.lon;
+              this.endL = location.properties.name;
+              this.routeData = {
+                startLocation: this.latholder1 + ',' +this.lonholder1,
+                endLocation: this.latholder2 + ',' +this.lonholder2,
+                date: new Date()
+              };
+            }          
           });
         }
+      }
     }
-  }
 
   
   navigatebutton() {
@@ -183,6 +202,7 @@ export class InsideAppComponent implements OnInit{
     this.lonholder1 = 0.000000;
     this.latholder2 = 0.000000;
     this.lonholder2 = 0.000000;
+
     // clear input field
     // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
     const closeButton1 = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
@@ -191,6 +211,7 @@ export class InsideAppComponent implements OnInit{
       button.click();
     }
   }
+  
 
 	logout() {
 		this.authService.logout();

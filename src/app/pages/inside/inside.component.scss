@@ -11,8 +11,8 @@
   position: absolute;
   align-items: center;
   top: 15px;
-  left: 50px;
-  right: 56px;
+  left: 32px;
+  right: 28px;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
 }
@@ -27,8 +27,8 @@
   position: absolute;
   align-items: center;
   top: 15px;
-  left: 30px;
-  right: 76px;
+  left: 32px;
+  right: 28px;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
 }
@@ -48,25 +48,36 @@
   -ms-overflow-style: none;
 }
 
-#deleteRoute{
-  left: 220px;
-  z-index: 9999;
-  top: 0px;
+#saveRoute{
   --background: #121212a9;
-  position: absolute;
+  position: relative;
   width: 20%;
-  height: 60%;
+  height: 25px;
+}
+
+#deleteRoute{
+  --background: #121212a9;
+  position: relative;
+  width: 20%;
+  height: 25px;
 }
 
 #navButton{
-  left: 220px;
-  z-index: 9999;
-  top: 45px;
   --background: #121212a9;
-  position: absolute;
+  position: relative;
   width: 20%;
-  height: 60%;
+  height: 25px;
 }
+
+
+#functionsBar{
+  height: 30px;
+}
+
+#menuplaceButton{
+  height: 15px;
+}
+
 
 #searchButton{
   --background: #121212;
@@ -74,13 +85,18 @@
   --border: none;
   --padding-top: 10px;
   --padding-bottom: 10px; 
+  position: relative;
+  width: 20%;
+  height: 25px;
 }
 
 #menuButton{
   --background: #121212;
   --color: #428cff;
   --border: none;
-  --height: 2px;
+  position: relative;
+  width: 20%;
+  height: 25px;
 }
 
 #navinputButton{
@@ -89,6 +105,9 @@
   --border: none;
   --padding-top: 10px;
   --padding-bottom: 10px; 
+  position: relative;
+  width: 20%;
+  height: 25px;
 }
 
 #logoutButton{
@@ -96,7 +115,10 @@
   --color: #428cff;
   --border: none;
   --padding-top: 10px;
-  --padding-bottom: 10px;  
+  --padding-bottom: 10px; 
+  position: relative;
+  width: 20%;
+  height: 25px;
 }
 
 

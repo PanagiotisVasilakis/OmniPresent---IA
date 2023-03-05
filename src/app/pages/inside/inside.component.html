@@ -6,8 +6,10 @@
 
       <ion-content>
 
-        <div id="map" style="width:100%; height: 89.5%;"></div>
+        <div id="map" style="width:100%; height: 92%;"></div>
+
         <div id="autocomplete1" [hidden]="searchForm"></div>
+        
         <div id="autocomplete2" [hidden]="navForm">
           <ion-button (click)="navigatebutton()" id="navButton">
             <ion-icon slot="icon-only" name="navigate" style="font-size: 90%;"></ion-icon>
@@ -15,21 +17,24 @@
           <ion-button  (click)="deleteRoute()" id="deleteRoute">
             <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
           </ion-button>
+          <!-- <ion-button (click)="saveRoute()" id="saveRoute">
+            <ion-icon slot="icon-only" name="save" style="font-size: 90%;"></ion-icon>
+          </ion-button> -->
         </div>
 
-        <div>
+        <div id="functionsBar">
           <ion-button (click)="this.searchForm = !this.searchForm;" id="searchButton" >
             <ion-icon slot="icon-only" name="search"></ion-icon>
           </ion-button>
           <ion-button (click)="this.navForm = !this.navForm;"  id="navinputButton">
             <ion-icon slot="icon-only" name="compass"></ion-icon>
           </ion-button>
-          
           <ion-button (click)="logout()" id="logoutButton">
             <ion-icon slot="icon-only" name="log-out"></ion-icon>
           </ion-button>
         </div>
-        <div> <ion-menu-button id="menuButton"></ion-menu-button></div>
+
+        <div id="menuplaceButton"> <ion-menu-button id="menuButton"></ion-menu-button></div>
       
       </ion-content>
     

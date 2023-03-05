@@ -11,6 +11,8 @@ import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { InsideAppComponent } from './inside.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+// import { RouteService } from './route.service';
 // import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
@@ -21,10 +23,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     IonicModule,
     InsidePageRoutingModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    HttpClientModule  ],
   // schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    // RouteService,
     Platform,
     StatusBar,
     SplashScreen,

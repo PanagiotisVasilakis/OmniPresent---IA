@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { AlertController } from '@ionic/angular';
 
+
+
 const ACCESS_TOKEN_KEY = 'my-access-token';
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
 
@@ -33,6 +35,7 @@ export class AuthService {
       this.isAuthenticated.next(false);
     }
   }
+
 
   // Create new user
   signUp(credentials: {email: any, password: any}): Observable<any> {
