@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Storage }  from '@ionic/storage';
 import { IonicStorageModule }  from '@ionic/storage-angular'; 
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+// import * as Sqlite from '@capacitor-community/sqlite';
 
 
 export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {

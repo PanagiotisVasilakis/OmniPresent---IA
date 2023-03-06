@@ -1,6 +1,6 @@
-ion-menu::part(backdrop) {
-    background-color: rgba(255, 0, 255, 0.5);
-  }
+// ion-menu::part(backdrop) {
+//     background-color: rgba(255, 0, 255, 0.5);
+//   }
   
   ion-menu::part(container) {
     border-radius: 0 20px 20px 0;
@@ -8,4 +8,7 @@ ion-menu::part(backdrop) {
     box-shadow: 4px 0px 16px #428cff;
   }
 
+  // #menu{
+  //   max-height: auto;
+  // }
   
