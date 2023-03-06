@@ -3,10 +3,17 @@
     --ion-background-color: #075767;
 }
 
-.logophoto {
+.logoname {
     width: 120%;
-    bottom: 400px;
+    bottom: 370px;
     right: -25px;
+    position: absolute;
+}
+
+.logoshape {
+    width: 50%;
+    top: 42px;
+    right: 70px;
     position: absolute;
 }
 
@@ -25,11 +32,12 @@
     }
     
     .form-control {
+        top: 30px;
         margin: 20px 0;
         width: 100%;
         padding: 0px;
         border-radius: 5px;
-        box-shadow: 0px 0px 5px rgb(6, 6, 6);
+        box-shadow: 0px 0px 5px rgba(6, 6, 6, 0.295);
     }
     
     .btn {
@@ -55,6 +63,6 @@
     }
     
     .btn:disabled {
-    background-color: #ccc;
-    color: rgb(0, 0, 0);
+        background-color: #ccc;
+        color: rgb(0, 0, 0);
     }
