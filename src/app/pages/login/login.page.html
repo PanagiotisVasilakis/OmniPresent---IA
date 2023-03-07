@@ -1,24 +1,24 @@
-	<!-- <ion-header>
-		<ion-toolbar>
-		<ion-title class="apptitle">OmniPresent</ion-title>
-		</ion-toolbar>
-    </ion-header> -->
+
   <ion-content id = "content">
-	<!-- <ion-title class="apptitle">Omnipresent</ion-title> -->
-	<ion-img src="assets/icon/Omnipresent-1.png" class="logoname" ></ion-img>
-	<ion-img src="assets/icon/OmniLogo.png" class="logoshape" ></ion-img>
+	
+	
 	<form (ngSubmit)="login()" [formGroup]="credentialsForm" class="form-container">
-	  <div class="form-group">
-		<ion-item class="form-control">
-		  <ion-input placeholder="Email" formControlName="email"></ion-input>
-		</ion-item>
-		<ion-item class="form-control">
-		  <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
-		</ion-item>
-	  </div>
-	  <!-- <div id ="buttons"> -->
-	  <ion-button type="submit" expand="block" class="btn btn-primary" [disabled]="!credentialsForm.valid">Log in</ion-button>
-	  <ion-button type="button" expand="block" class="btn btn-secondary" (click)="signUp()">Sign up!</ion-button>
-	<!-- </div> -->
+		<div>
+			<ion-img src="assets/icon/Omnipresent(2).png" class="logo2" ></ion-img>
+		</div>
+
+	  	<div class="form-group">
+			<ion-item class="form-control">
+				<ion-input placeholder="Email" formControlName="email"></ion-input>
+			</ion-item>
+				<ion-item class="form-control">
+				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+			</ion-item>
+	  	</div>
+
+	  
+		<ion-button type="submit" expand="block" class="btn btn-primary" [disabled]="!credentialsForm.valid">Log in</ion-button>
+		<ion-button type="button" expand="block" class="btn btn-secondary" (click)="signUp()">Sign up!</ion-button>
+
 	</form>
   </ion-content>
