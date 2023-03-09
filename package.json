@@ -51,7 +51,7 @@
     "babel-preset-expo": "^9.2.2",
     "child_process": "^1.0.2",
     "cordova": "^11.1.0",
-    "cordova-plugin-nativegeocoder": "3.5.0",
+    "cordova-plugin-nativegeocoder": "3.5.1",
     "esri-leaflet": "^3.0.10",
     "expo": "^47.0.13",
     "find-babel-config": "^2.0.0",
