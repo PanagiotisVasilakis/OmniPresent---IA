@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url: 'http://192.168.56.1:4000',
+  url: 'http://192.168.2.8:4000',
   apiKey: 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA',
 };
 
