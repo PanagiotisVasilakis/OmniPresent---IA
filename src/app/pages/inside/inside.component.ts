@@ -21,6 +21,7 @@ export class InsideAppComponent implements OnInit{
   myAPIKey = "7ab20422eadd4008be20a8274432337d";
   searchForm = true;
   navForm=true;
+  displayRoutes=true;
   latholder1:number = 0.000000;
   lonholder1:number = 0.000000;
   latholder2:number = 0.000000;
@@ -31,6 +32,9 @@ export class InsideAppComponent implements OnInit{
   startL: string;
   endL: string;
   routes: any[] = [];
+  savedRoutes: any[] = [];
+
+
   // startLocation: string;
   // endLocation: string;
   // date: Date;
@@ -126,7 +130,7 @@ export class InsideAppComponent implements OnInit{
       });
     }
 
-    
+
     //Navigation
       const input2 = document.getElementById("autocomplete2") as HTMLInputElement;
       if (input2) {
@@ -169,15 +173,15 @@ export class InsideAppComponent implements OnInit{
               this.endL = location.properties.name;
 
 
-              //SAVE ROUTES BY CLICK
+              //SAVE ROUTES BY CLICK              
               // Add this line of code to get a reference to the save button element
-              const saveButton = document.getElementById("saveButton") as HTMLElement;
+              const saveButton = document.getElementById("saveButton") as HTMLElement | any;
               
               // Add an event listener to the save button that calls the saveRoute function
               saveButton.addEventListener("click", async () => {
                 const SavedRouteName = this.startL + ' - ' + this.endL;
-                await this.sqLiteDatabaseService.execute(
-                  `INSERT INTO places (name, latitude1, longitude1, latitude2, longitude2)
+                const result = await this.sqLiteDatabaseService.execute(
+                  `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
                   VALUES (?, ?, ?, ?, ?);`, 
                   [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
                 );
@@ -207,9 +211,29 @@ export class InsideAppComponent implements OnInit{
   }
   
 
-  async displayRoutes() {
-
+  async LoadSavedRoutes() {
+    const result = await this.sqLiteDatabaseService.execute(
+      `SELECT id, name
+       FROM places;`
+    );
+    this.savedRoutes = result.values;
   }
+
+  async toggleSavedRoutes() {
+    this.displayRoutes = !this.displayRoutes;
+    if (this.displayRoutes) {
+      await this.LoadSavedRoutes();
+    }
+  }
+
+  async deleteDatabaseRoute(id: number) {
+    const result = await this.sqLiteDatabaseService.execute(
+      `DELETE FROM places WHERE id = ?;`,
+      [id]
+    );
+    this.savedRoutes = this.savedRoutes.filter(route => route.id !== id);
+  }
+  
   
   
 

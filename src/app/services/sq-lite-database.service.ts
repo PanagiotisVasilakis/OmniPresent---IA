@@ -7,46 +7,46 @@ import { CapacitorSQLite, SQLiteDBConnection } from '@capacitor-community/sqlite
   providedIn: 'root'
 })
 export class SqLiteDatabaseService {
-  public db: SQLiteDBConnection | any;
+  private db: SQLiteDBConnection | any;
 
-  constructor() { }
+  constructor() { }  
 
   async createDatabase(): Promise<SQLiteDBConnection> {
-    // Initialize the database
-    // Get the connection object
-    this.db = await CapacitorSQLite.createConnection({ database: 'RoutesSaved' });
+    if (this.db) {
+      console.log('Returning existing database');
+      return this.db;
+    } 
+    else {
+        // await this.createDatabase();
+        // Initialize the database
+        // Get the connection object
+        this.db = await CapacitorSQLite.createConnection({ database: 'RoutesSaved' });
 
-    await this.db.execute(`
-      CREATE TABLE IF NOT EXISTS places (
-          id INTEGER PRIMARY KEY,
-          name TEXT,
-          latitudeFirst REAL,
-          longitudeFirst REAL,
-          latitudeSecond REAL,
-          longitudeSecond REAL
-      );`
-    );
-    return this.db;
-    // await db.execute(
-    //   `INSERT INTO places (name, latitude, longitude)
-    //   VALUES (?, ?, ?);`, 
-    //   [placeName, placeLatitudeFirst, placeLongitudeFirst, placeLatitudeSecond, placeLongitudeSecond]
-    // );
+        await this.db.execute(`
+          CREATE TABLE IF NOT EXISTS places (
+              id INTEGER PRIMARY KEY,
+              name TEXT,
+              latitudeFirst REAL,
+              longitudeFirst REAL,
+              latitudeSecond REAL,
+              longitudeSecond REAL
+          );`
+        );
+        console.log('Database created');
+      return this.db as SQLiteDBConnection;
+    }
+ }
 
-    // const result = await db.query(
-    //   `SELECT id, name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond
-    //   FROM places;`
-    // );
 
-    // const places = result.values;
-  }
-  async execute(sql: string, values?: any[]): Promise<any> {
+  async execute(sql: string, values?: any[]) {
     if (!this.db) {
       await this.createDatabase();
     }
 
-    return this.db.execute(sql, values as any);
+    if (values === undefined) {
+      return this.db.execute(sql);
+    } else {
+      return this.db.execute(sql, values as any);
+   }
   }
-
-
 }

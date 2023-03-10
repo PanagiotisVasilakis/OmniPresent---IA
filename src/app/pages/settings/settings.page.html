@@ -4,13 +4,13 @@
 	<ion-router-outlet id="main-content"></ion-router-outlet>
   
 	<ion-header>
-	  <ion-toolbar>
+	  <ion-toolbar color="primary">
   
 			<ion-buttons slot="start">
 				<ion-menu-button></ion-menu-button>
 			</ion-buttons>
   
-			<ion-title>Settings</ion-title>
+			<ion-title >Settings</ion-title>
   
 		<ion-buttons slot="end">
 		  <ion-button (click)="logout()">
@@ -20,9 +20,65 @@
 		
 		</ion-toolbar>
 	</ion-header>
-  
+
 	<ion-content>
-  
-	</ion-content> 
+		<ion-list>
+	
+		  <!-- Account Settings -->
+		  <ion-list-header>
+			<ion-label>Account</ion-label>
+		  </ion-list-header>
+		  <ion-item>
+			<ion-icon name="mail"></ion-icon>
+			<ion-label>Email Address</ion-label>
+			<ion-input type="email"></ion-input>
+		  </ion-item>
+		  <ion-item>
+			<ion-icon name="key"></ion-icon>
+			<ion-label>Password</ion-label>
+			<ion-input type="password"></ion-input>
+		  </ion-item>
+	
+		  <!-- Notifications and Privacy Settings -->
+		  <ion-list-header>
+			<ion-label>Notifications and Privacy</ion-label>
+		  </ion-list-header>
+		  <ion-item>
+			<ion-icon name="notifications"></ion-icon>
+			<ion-label>Push Notifications</ion-label>
+			<ion-toggle></ion-toggle>
+		  </ion-item>
+		  <ion-item>
+			<ion-icon name="logo-facebook"></ion-icon>
+			<ion-label>Social Media Integration</ion-label>
+			<ion-toggle></ion-toggle>
+		  </ion-item>
+	
+		  <!-- Other Settings -->
+		  <ion-list-header>
+			<ion-label>Other</ion-label>
+		  </ion-list-header>
+		  <ion-item>
+			<ion-label>Help & Support</ion-label>
+			<ion-button color="medium" id="ContactUs">Contact Us</ion-button>
+			<ion-popover trigger="ContactUs" triggerAction="click">
+				<ng-template>
+				  <ion-content class="ion-padding">tel: 69..... <br> email: p@gmail.com</ion-content>
+				</ng-template>
+			</ion-popover>
+		  </ion-item>
+		  <ion-item>
+			<ion-label>Delete Account</ion-label>
+			<ion-button color="danger">Delete Account</ion-button>
+		  </ion-item>
+	
+		</ion-list>
+	  </ion-content>
+
+	  <ion-footer>
+		<ion-toolbar>
+		  <ion-label>&nbsp;App Version 0.0.1</ion-label>
+		</ion-toolbar>
+	  </ion-footer>
   
   </ion-app>

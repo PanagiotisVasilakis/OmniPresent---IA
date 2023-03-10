@@ -10,11 +10,12 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SettingsPage implements OnInit {
 
   constructor(
-    private authService: AuthService
-  ) { }
+    private authService: AuthService  ) { }
 
   ngOnInit() {
   }
+
+
 
    logout() {
 		this.authService.logout();

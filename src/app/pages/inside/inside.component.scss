@@ -19,16 +19,17 @@
 
 #autocomplete2{
   padding: 10px;
-  font-size: 16px;
+  width: 90%;
+  // font-size: auto;
   border-radius: 10px;
   border: none;
   font-weight: bold;
   z-index: 9999;
-  position: absolute;
+  position: fixed;
+  align-content: center;
   align-items: center;
-  top: 15px;
-  left: 32px;
-  right: 28px;
+  top: 5%;
+  left:5%;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
 }
@@ -126,6 +127,23 @@
   position: relative;
   width: 20%;
   height: 25px;
+}
+
+.ionicardforSavedRoutes{
+  padding: 5px;
+  width: 90%;
+  // font-size: auto;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  z-index: 9999;
+  position: fixed;
+  align-content: center;
+  align-items: center;
+  top: 30%;
+  left:5%;
+  background-color: rgba(0, 0, 0, 0.459);
+  max-height: auto;
 }
 
 

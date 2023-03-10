@@ -20,10 +20,30 @@
           <ion-button class="saveRoute" id="saveButton">
             <ion-icon slot="icon-only" name="save" style="font-size: 90%;"></ion-icon>
           </ion-button>
-          <ion-button (click)="displayRoutes()" id="displayroute">
+          <ion-button (click)="toggleSavedRoutes()" id="displayroute">
             <ion-icon slot="icon-only" name="star" style="font-size: 90%;"></ion-icon>
           </ion-button>
         </div>
+
+        <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Saved Routes</ion-card-title>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <ion-list lines="inset" *ngFor="let route of savedRoutes">
+                <ion-item>
+                  {{ route.name }}
+                  <ion-button (click)="deleteDatabaseRoute(route.id)">
+                    <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </div>
+
 
         <div id="functionsBar">
           <ion-button (click)="this.searchForm = !this.searchForm;" id="searchButton" >
