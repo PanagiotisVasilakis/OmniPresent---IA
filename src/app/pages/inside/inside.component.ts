@@ -194,10 +194,13 @@ export class InsideAppComponent implements OnInit{
 
   
   navigatebutton() {
-    this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
+    //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details,route_details&apiKey=${this.myAPIKey}
+    //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}
+    this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
     this.http.get<any>(this.url)
     .subscribe(calculatedRouteGeoJSON => {
       console.log(calculatedRouteGeoJSON);
+
       this.route = L.geoJSON(calculatedRouteGeoJSON, {
         style: (_feature) => {
           return {
@@ -206,7 +209,36 @@ export class InsideAppComponent implements OnInit{
           };
         }
       });
+      //distance and time
+      this.route.bindPopup((layer: { feature: { properties: { distance: any; distance_units: any; time: any; }; }; }) => {
+        return `${layer.feature.properties.distance} ${layer.feature.properties.distance_units}, ${layer.feature.properties.time}`})
       this.route.addTo(this.mymap);
+
+      // const turnByTurns: { type: string; geometry: { type: string; coordinates: any; }; properties: { instruction: any; }; }[] = []; // collect all transitions
+      // routeResult.features.forEach((feature: { properties: { legs: any[]; }; geometry: { coordinates: { [x: string]: { [x: string]: any; }; }; }; }) => feature.properties.legs.forEach((leg: { steps: any[]; }, legIndex: string | number) => leg.steps.forEach((step: { from_index: string | number; instruction: { text: any; }; }) => {
+      //   const pointFeature = {
+      //     "type": "Feature",
+      //     "geometry": {
+      //       "type": "Point",
+      //       "coordinates": feature.geometry.coordinates[legIndex][step.from_index]
+      //     },
+      //     "properties": {
+      //       "instruction": step.instruction.text
+      //     }
+      //   }
+      //   turnByTurns.push(pointFeature);
+      // })));
+
+      // L.geoJSON({
+      //   type: "FeatureCollection",
+      //   features: turnByTurns
+      // }, {
+      //   pointToLayer: function(feature, latlng) {
+      //     return L.circleMarker(latlng, turnByTurnMarkerStyle);
+      //   }
+      // }).bindPopup((layer) => {
+      //   return `${layer.feature.properties.instruction}`
+      // }).addTo(this.mymap);
     });
   }
   

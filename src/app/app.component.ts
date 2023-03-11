@@ -17,17 +17,17 @@ export class AppComponent implements OnInit{
 
 	Pages = [
 		{
-		  title: 'navigation',
+		  title: 'Navigation',
 		  url: '/inside',
 		  icon: 'compass'
 		},
 		{
-		  title: 'profile',
+		  title: 'Connect',
 		  url: '/profile',
 		  icon: 'person'
 		},
 		{
-		  title: 'settings',
+		  title: 'Settings',
 		  url: '/settings',
 		  icon: 'settings'
 		}

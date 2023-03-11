@@ -8,7 +8,9 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-
+  showEmail = false;
+  showPassword = false;
+  
   constructor(
     private authService: AuthService  ) { }
 

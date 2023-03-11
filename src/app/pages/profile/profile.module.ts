@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { profilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import { SMS } from '@awesome-cordova-plugins/sms/ngx';
+
 
 @NgModule({
   imports: [
@@ -15,6 +18,10 @@ import { ProfilePage } from './profile.page';
     IonicModule,
     profilePageRoutingModule
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
+  providers: [
+    Geolocation,
+    SMS
+  ]
 })
 export class profilePageModule {}

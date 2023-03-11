@@ -17,6 +17,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "allowJs": true,
+    // "types": ["node"],
+    // "allowSyntheticDefaultImports": true,
     "target": "ES2022",
     "module": "es2020",
     "lib": [

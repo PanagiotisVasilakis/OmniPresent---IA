@@ -4,13 +4,14 @@
   <ion-router-outlet id="main-content"></ion-router-outlet>
 
   <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
 
 		  <ion-buttons slot="start">
 			  <ion-menu-button></ion-menu-button>
 	  	</ion-buttons>
 
-		  <ion-title>Profile</ion-title>
+		  <ion-title style="width: 110%; font-size: 90%;">Emergency Settings</ion-title>
+      
 
       <ion-buttons slot="end">
         <ion-button (click)="logout()">
@@ -22,7 +23,31 @@
   </ion-header>
 
   <ion-content>
-
-  </ion-content> 
+    <form>
+      <ion-item>
+        <ion-label>Enable emergency contact</ion-label>
+        <ion-toggle [(ngModel)]="isEmergencyContactAdd" [ngModelOptions]="{ standalone: true }"></ion-toggle>
+      </ion-item>
+  
+      <ion-card *ngIf="isEmergencyContactAdd">
+        <ion-item>
+          <ion-label position="relative">Name of Emergency Contact</ion-label>
+          <ion-input type="text" style="position: absolute; top: 100%;" [value]="emergencyContactName"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="relative">Phone Number of Emergency Contact</ion-label>
+          <ion-input type="tel" style="position: absolute; top: 100%;" [value]="emergencyContactNumber"></ion-input>
+        </ion-item>
+        <ion-button (click)="saveEmergencyContact()" class="button-Save-emergency-btn" color="primary">
+          Save Contact
+        </ion-button>
+      </ion-card>
+  
+      <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger">
+        Notify Emergency Contacts
+      </ion-button>
+    </form>
+  </ion-content>
+  
 
 </ion-app>

@@ -29,14 +29,27 @@
 			<ion-label>Account</ion-label>
 		  </ion-list-header>
 		  <ion-item>
-			<ion-icon name="mail"></ion-icon>
-			<ion-label>Email Address</ion-label>
-			<ion-input type="email"></ion-input>
+			<ion-text>Change Email</ion-text>
+			<ion-toggle [(ngModel)]="showEmail">
+			  Show Email Address
+			</ion-toggle>
 		  </ion-item>
+		  <ion-item *ngIf="showEmail">
+			<ion-label style="position: relative;">Email Address</ion-label>
+			<ion-input type="email" style="position: absolute; top: 100%;"></ion-input>
+			<ion-button style="position: absolute; top: 100%; right: 0;" (click)="changeEmail()">Change</ion-button>
+		  </ion-item>
+		  <div style="height: 5px;"></div>
 		  <ion-item>
-			<ion-icon name="key"></ion-icon>
-			<ion-label>Password</ion-label>
-			<ion-input type="password"></ion-input>
+			<ion-text>Change Password</ion-text>
+			<ion-toggle [(ngModel)]="showPassword">
+			  Show Password
+			</ion-toggle>
+		  </ion-item>
+		  <ion-item *ngIf="showPassword">
+			<ion-label style="position: relative;">Password</ion-label>
+			<ion-input type="password" style="position: absolute; top: 100%;"></ion-input>
+			<ion-button style="position: absolute; top: 100%; right: 0;" (click)="changePassword()">Change</ion-button>
 		  </ion-item>
 	
 		  <!-- Notifications and Privacy Settings -->
@@ -50,7 +63,7 @@
 		  </ion-item>
 		  <ion-item>
 			<ion-icon name="logo-facebook"></ion-icon>
-			<ion-label>Social Media Integration</ion-label>
+			<ion-label>Social Media</ion-label>
 			<ion-toggle></ion-toggle>
 		  </ion-item>
 	
