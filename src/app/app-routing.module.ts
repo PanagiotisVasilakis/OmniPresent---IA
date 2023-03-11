@@ -1,6 +1,7 @@
 import { AuthGuardService } from './services/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,7 +21,7 @@ const routes: Routes = [
 	  {
 		path: 'settings',
 		loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
-	  },
+	  }
 ];
 
 @NgModule({

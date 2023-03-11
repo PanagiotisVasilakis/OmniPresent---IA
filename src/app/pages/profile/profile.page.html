@@ -25,7 +25,7 @@
   <ion-content>
     <form>
       <ion-item>
-        <ion-label>Enable emergency contact</ion-label>
+        <ion-label>Add SMS contact</ion-label>
         <ion-toggle [(ngModel)]="isEmergencyContactAdd" [ngModelOptions]="{ standalone: true }"></ion-toggle>
       </ion-item>
   
@@ -43,9 +43,9 @@
         </ion-button>
       </ion-card>
   
-      <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger">
+      <!-- <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger">
         Notify Emergency Contacts
-      </ion-button>
+      </ion-button> -->
     </form>
   </ion-content>
   

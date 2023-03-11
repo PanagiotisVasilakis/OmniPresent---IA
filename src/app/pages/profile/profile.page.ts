@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-import {SmsManager} from "@byteowls/capacitor-sms";
+// import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
 import { Storage } from '@ionic/storage';
 
@@ -37,33 +37,33 @@ export class ProfilePage implements OnInit {
     console.log('we did it');
   }
   
-  sendEmergencySMS() {
-    // Retrieve emergency contacts array from local storage
-    this.storage.get('emergencyContacts').then(contacts => {
-      this.emergencyContacts = JSON.parse(contacts);
-      // Get the current location
-      this.geolocation.getCurrentPosition().then((resp) => {
-        this.latitude = resp.coords.latitude;
-        this.longitude = resp.coords.longitude;
+  // sendEmergencySMS() {
+  //   // Retrieve emergency contacts array from local storage
+  //   this.storage.get('emergencyContacts').then(contacts => {
+  //     this.emergencyContacts = JSON.parse(contacts);
+  //     // Get the current location
+  //     this.geolocation.getCurrentPosition().then((resp) => {
+  //       this.latitude = resp.coords.latitude;
+  //       this.longitude = resp.coords.longitude;
     
-        // Construct the message body
-        const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitude},${this.longitude}.`;
+  //       // Construct the message body
+  //       const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitude},${this.longitude}.`;
         
-        for (const element of this.emergencyContacts) {
-          const contact: any = element;
-          SmsManager.send({
-              numbers: contact.number,
-              text: message,
-          }).then(() => {
-              // success
-              console.log("success")
-          }).catch(error => {
-              console.error(error);
-          });
-        }
-      }) 
-    })
-  }
+  //       for (const element of this.emergencyContacts) {
+  //         const contact: any = element;
+  //         SmsManager.send({
+  //             numbers: contact.number,
+  //             text: message,
+  //         }).then(() => {
+  //             // success
+  //             console.log("success")
+  //         }).catch(error => {
+  //             console.error(error);
+  //         });
+  //       }
+  //     }) 
+  //   })
+  // }
   
 
   async ngOnInit() {

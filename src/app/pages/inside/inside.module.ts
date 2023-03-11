@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { InsidePageRoutingModule } from './inside-routing.module';
 
-// import { Geolocation } from '@awesome-cordova-plugins/geolocation';
 import { RouteReuseStrategy } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
@@ -12,7 +11,8 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { InsideAppComponent } from './inside.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-// import { RouteService } from './route.service';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import { SMS } from '@awesome-cordova-plugins/sms/ngx';
 // import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
@@ -27,7 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule  ],
   // schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    // RouteService,
+    Geolocation,
+    SMS,
     Platform,
     StatusBar,
     SplashScreen,

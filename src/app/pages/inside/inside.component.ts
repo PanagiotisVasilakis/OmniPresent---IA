@@ -7,6 +7,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as L from 'leaflet';
 import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
 import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import {SmsManager} from "@byteowls/capacitor-sms";
+import {Device, DeviceInfo} from "@capacitor/device";
+import { Storage } from '@ionic/storage';
 
 
 
@@ -33,6 +37,13 @@ export class InsideAppComponent implements OnInit{
   endL: string;
   routes: any[] = [];
   savedRoutes: any[] = [];
+  latitude: number;
+  longitude: number;
+  isEmergencyContactAdd: boolean = false;
+  iosOrAndroid: boolean;
+  emergencyContacts: Array<{ name: string, number: string }> = [];
+  emergencyContactName: string;
+  emergencyContactNumber: string;
 
 
   // startLocation: string;
@@ -53,36 +64,41 @@ export class InsideAppComponent implements OnInit{
     private splashScreen: SplashScreen,
     private authService: AuthService,
     private sqLiteDatabaseService: SqLiteDatabaseService,
+    private geolocation: Geolocation,
+    private storage: Storage
     // private routeService: RouteService
     ) {
     this.initializeApp();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const info: DeviceInfo = await Device.getInfo();
+    this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
+
     //map initialization 
     this.mymap = L.map('map', {
       zoomControl: false
     }).setView([ 38.246639, 21.734573], 11);
 
     //osm layer
-    var osm = L.tileLayer('https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=7ab20422eadd4008be20a8274432337d', {
+    let osm = L.tileLayer('https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=7ab20422eadd4008be20a8274432337d', {
       id: 'osm-bright'
     });
 
     //Dark Map
-    var darkMap = L.tileLayer('https://maps.geoapify.com/v1/tile/dark-matter-yellow-roads/{z}/{x}/{y}.png?apiKey=7ab20422eadd4008be20a8274432337d', {
+    let darkMap = L.tileLayer('https://maps.geoapify.com/v1/tile/dark-matter-yellow-roads/{z}/{x}/{y}.png?apiKey=7ab20422eadd4008be20a8274432337d', {
        id: 'osm-bright'
     });
 
     //Layer Controller
-    var baseMaps = {
+    let baseMaps = {
       "Omni Map": osm,
       "Dark Mode": darkMap
     };
 
     //deafault map
     osm.addTo(this.mymap);
-    var controlLayers = new L.Control.Layers(baseMaps).addTo(this.mymap);
+    let controlLayers = new L.Control.Layers(baseMaps).addTo(this.mymap);
     controlLayers.setPosition('bottomright');
     // this.mymap.zoomControl.setPosition('topright');
     // add map scale info
@@ -180,7 +196,7 @@ export class InsideAppComponent implements OnInit{
               // Add an event listener to the save button that calls the saveRoute function
               saveButton.addEventListener("click", async () => {
                 const SavedRouteName = this.startL + ' - ' + this.endL;
-                const result = await this.sqLiteDatabaseService.execute(
+                await this.sqLiteDatabaseService.execute(
                   `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
                   VALUES (?, ?, ?, ?, ?);`, 
                   [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
@@ -259,7 +275,7 @@ export class InsideAppComponent implements OnInit{
   }
 
   async deleteDatabaseRoute(id: number) {
-    const result = await this.sqLiteDatabaseService.execute(
+    await this.sqLiteDatabaseService.execute(
       `DELETE FROM places WHERE id = ?;`,
       [id]
     );
@@ -287,6 +303,34 @@ export class InsideAppComponent implements OnInit{
       button.style.display = "none";
       button.click();
     }
+  }
+
+  sendEmergencySMS() {
+    // Retrieve emergency contacts array from local storage
+    this.storage.get('emergencyContacts').then(contacts => {
+      this.emergencyContacts = JSON.parse(contacts);
+      // Get the current location
+      this.geolocation.getCurrentPosition().then((resp) => {
+        this.latitude = resp.coords.latitude;
+        this.longitude = resp.coords.longitude;
+    
+        // Construct the message body
+        const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitude},${this.longitude}.`;
+        
+        for (const element of this.emergencyContacts) {
+          const contact: any = element;
+          SmsManager.send({
+              numbers: contact.number,
+              text: message,
+          }).then(() => {
+              // success
+              console.log("success")
+          }).catch(error => {
+              console.error(error);
+          });
+        }
+      }) 
+    })
   }
   
 
