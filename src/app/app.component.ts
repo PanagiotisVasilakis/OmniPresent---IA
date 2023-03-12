@@ -22,7 +22,7 @@ export class AppComponent implements OnInit{
 		  icon: 'compass'
 		},
 		{
-		  title: 'Connect',
+		  title: 'Account',
 		  url: '/profile',
 		  icon: 'person'
 		},

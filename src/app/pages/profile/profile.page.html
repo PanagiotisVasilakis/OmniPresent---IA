@@ -4,13 +4,13 @@
   <ion-router-outlet id="main-content"></ion-router-outlet>
 
   <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar color="tertiary">
 
 		  <ion-buttons slot="start">
 			  <ion-menu-button></ion-menu-button>
 	  	</ion-buttons>
 
-		  <ion-title style="width: 110%; font-size: 90%;">Emergency Settings</ion-title>
+		  <ion-title style="width: 100%; font-size:larger; font-weight: bold;">Account</ion-title>
       
 
       <ion-buttons slot="end">
@@ -35,11 +35,11 @@
         </ion-item>
     
         <ion-card *ngIf="isEmergencyContactAdd">
-          <ion-item>
+          <ion-item color="primary">
             <ion-label position="relative">Name of Emergency Contact</ion-label>
             <ion-input type="text" style="position: absolute; top: 100%;" [value]="emergencyContactName"></ion-input>
           </ion-item>
-          <ion-item>
+          <ion-item color="primary">
             <ion-label position="relative">Phone Number of Emergency Contact</ion-label>
             <ion-input type="tel" style="position: absolute; top: 100%;" [value]="emergencyContactNumber"></ion-input>
           </ion-item>
@@ -55,7 +55,7 @@
 		    <ion-list-header style="font-weight: bold; font-size:larger;">
             <ion-label>Account</ion-label>
         </ion-list-header>
-        <ion-item>
+        <ion-item color="primary">
             <ion-text>Change Email</ion-text>
             <ion-toggle [(ngModel)]="showEmail">
               Show Email Address
@@ -66,8 +66,7 @@
             <ion-input type="email" style="position: absolute; top: 100%;"></ion-input>
             <ion-button style="position: absolute; top: 100%; right: 0;" (click)="changeEmail()">Change</ion-button>
         </ion-item>
-        <div style="height: 5px;"></div>
-        <ion-item>
+        <ion-item color="primary">
             <ion-text>Change Password</ion-text>
             <ion-toggle [(ngModel)]="showPassword">
               Show Password
@@ -78,7 +77,7 @@
             <ion-input type="password" style="position: absolute; top: 100%;"></ion-input>
             <ion-button style="position: absolute; top: 100%; right: 0;" (click)="changePassword()">Change</ion-button>
         </ion-item>
-        <ion-item>
+        <ion-item color="primary">
             <ion-label>Delete Account</ion-label>
             <ion-button color="danger">Delete Account</ion-button>
         </ion-item>
