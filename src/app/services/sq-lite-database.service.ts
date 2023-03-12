@@ -46,6 +46,12 @@ export class SqLiteDatabaseService {
  }
 
 
+
+  /* 
+  In your code, you have defined two methods: run and execute. They both use the same SQLite interface: CapacitorSQLite. The only difference is that run uses prepared statements, while execute does not. Prepared statements are a way of optimizing SQL queries by pre-compiling them and reusing them with different parameters. They can improve performance and security by avoiding SQL injection attacks.
+  So, in your code, run is better for inserting and updating if you want to use prepared statements, and execute is better for selecting and deleting if you don’t need prepared statements. However, this is not a general rule for SQLite, but rather a design choice you made in your code. You could also use prepared statements for selecting and deleting, or not use them for inserting and updating. It depends on your needs and preferences.
+  */
+
   //for inserting and updating with prepared statements
   async run(sql: string, values: any[]) {
     if (!this.db) {
@@ -56,7 +62,7 @@ export class SqLiteDatabaseService {
       return this.db.run(sql);
     } else {
       return this.db.run(sql, values as any);
-  }
+    }
   }
 
 
@@ -70,6 +76,6 @@ export class SqLiteDatabaseService {
       return this.db.execute(sql);
     } else {
       return this.db.execute(sql, values as any);
-   }
+    }
   }
 }

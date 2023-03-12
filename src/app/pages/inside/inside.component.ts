@@ -184,7 +184,7 @@ export class InsideAppComponent implements OnInit{
               // Add an event listener to the save button that calls the saveRoute function
               saveButton.addEventListener("click", async () => {
                 const SavedRouteName = this.startL + ' - ' + this.endL;
-                await this.sqLiteDatabaseService.execute(
+                await this.sqLiteDatabaseService.run(
                   `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
                   VALUES (?, ?, ?, ?, ?);`, 
                   [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]

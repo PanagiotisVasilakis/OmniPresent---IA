@@ -11,11 +11,14 @@ import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service
 })
 export class ProfilePage implements OnInit {
   isEmergencyContactAdd: boolean = false;
+  isEmergencyContactChange: boolean = false;
   iosOrAndroid: boolean;
   emergencyContactName: string;
   emergencyContactNumber: string;
   showEmail = false;
   showPassword = false;
+  savedContacts: any[] = [];
+  displayContacts = true;
   
 
   constructor(
@@ -31,6 +34,29 @@ export class ProfilePage implements OnInit {
             [this.emergencyContactName, this.emergencyContactNumber]
           );
           console.log('we did it');
+  }
+
+  async LoadSavedContacts() {
+    const result = await this.sqLiteDatabaseService.execute(
+      `SELECT * FROM contacts;`
+    );
+    this.savedContacts = result.values;
+  }
+
+  async deleteDatabaseContacts(id: number) {
+    await this.sqLiteDatabaseService.execute(
+      `DELETE FROM contacts WHERE id = ?;`,
+      [id]
+    );
+    this.savedContacts = this.savedContacts.filter((contact: { id: number; }) => contact.id !== id);
+  }
+
+  async updateDatabaseContacts(id: number) {
+    await this.sqLiteDatabaseService.run(
+      `UPDATE FROM contacts WHERE id = ?;`,
+      [id]
+    );
+    this.savedContacts = this.savedContacts.filter((contact: { id: number; }) => contact.id !== id);
   }
 
   async ngOnInit() {

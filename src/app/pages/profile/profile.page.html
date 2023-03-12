@@ -25,28 +25,52 @@
   <ion-content>
     
       <ion-list>
-        <!-- Account Settings -->
-		    <ion-list-header color="tertiary" style="font-weight: bold; font-size:larger;">
-            <ion-label>Contacts</ion-label>
-        </ion-list-header>
-        <ion-item >
-          <ion-label>Add SMS contact</ion-label>
-          <ion-toggle [(ngModel)]="isEmergencyContactAdd" [ngModelOptions]="{ standalone: true }"></ion-toggle>
-        </ion-item>
-    
-        <ion-card *ngIf="isEmergencyContactAdd">
+          <!-- Account Settings -->
+          <ion-list-header color="tertiary" style="font-weight: bold; font-size:larger;">
+              <ion-label>Contacts</ion-label>
+          </ion-list-header>
+
           <ion-item >
-            <ion-label position="relative">Name of Emergency Contact</ion-label>
-            <ion-input type="text" style="position: absolute; top: 100%;" [value]="emergencyContactName"></ion-input>
+              <ion-icon name="person-add-outline" color="tertiary"></ion-icon>
+              <ion-label>&nbsp;&nbsp;Add SMS contact</ion-label>
+              <ion-toggle [(ngModel)]="isEmergencyContactAdd" [ngModelOptions]="{ standalone: true }"></ion-toggle>
           </ion-item>
+      
+          <ion-card *ngIf="isEmergencyContactAdd">
+              <ion-item >
+                  <ion-label position="relative">Name of Emergency Contact</ion-label>
+                  <ion-input type="text" style="position: absolute; top: 100%;" [value]="emergencyContactName"></ion-input>
+              </ion-item>
+              <ion-item >
+                  <ion-label position="relative">Phone Number of Emergency Contact</ion-label>
+                  <ion-input type="tel" style="position: absolute; top: 100%;" [value]="emergencyContactNumber"></ion-input>
+              </ion-item>
+              <ion-button (click)="saveEmergencyContact()" class="button-Save-emergency-btn" color="primary">Save Contact</ion-button>
+          </ion-card>
+
           <ion-item >
-            <ion-label position="relative">Phone Number of Emergency Contact</ion-label>
-            <ion-input type="tel" style="position: absolute; top: 100%;" [value]="emergencyContactNumber"></ion-input>
+              <ion-icon name="refresh-circle-outline" color="tertiary"></ion-icon>
+              <ion-label>&nbsp;&nbsp;Change or Delete Contacts</ion-label>
+              <ion-toggle [(ngModel)]="isEmergencyContactChange" [ngModelOptions]="{ standalone: true }"></ion-toggle>
           </ion-item>
-          <ion-button (click)="saveEmergencyContact()" class="button-Save-emergency-btn" color="primary">
-            Save Contact
-          </ion-button>
-        </ion-card>
+          <ion-card *ngIf="isEmergencyContactChange">
+              <ion-card-header>
+                  <ion-card-title>Saved Contacts</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                  <ion-list lines="inset" *ngFor="let contact of savedContacts">
+                      <ion-item>
+                          {{ contact.name }}
+                          <ion-button (click)="updateDatabaseContacts(route.id)">
+                            <ion-icon slot="icon-only" color="tertiary" name="refresh-circle-outline" style="font-size: 90%;"></ion-icon>
+                          </ion-button>
+                          <ion-button (click)="deleteDatabaseContacts(route.id)">
+                              <ion-icon slot="icon-only" color="danger" name="trash" style="font-size: 90%;"></ion-icon>
+                          </ion-button>
+                      </ion-item>
+                  </ion-list>
+              </ion-card-content>
+          </ion-card>
       </ion-list>
     
 
@@ -56,7 +80,8 @@
             <ion-label>Account</ion-label>
         </ion-list-header>
         <ion-item >
-            <ion-text>Change Email</ion-text>
+            <ion-icon name="person-circle-outline" color="tertiary"></ion-icon>
+            <ion-text>&nbsp;&nbsp;Change Email</ion-text>
             <ion-toggle [(ngModel)]="showEmail">
               Show Email Address
             </ion-toggle>
@@ -67,7 +92,8 @@
             <ion-button style="position: absolute; top: 100%; right: 0;" (click)="changeEmail()">Change</ion-button>
         </ion-item>
         <ion-item >
-            <ion-text>Change Password</ion-text>
+            <ion-icon name="person-circle-outline" color="tertiary"></ion-icon>
+            <ion-text>&nbsp;&nbsp;Change Password</ion-text>
             <ion-toggle [(ngModel)]="showPassword">
               Show Password
             </ion-toggle>
@@ -78,7 +104,8 @@
             <ion-button style="position: absolute; top: 100%; right: 0;" (click)="changePassword()">Change</ion-button>
         </ion-item>
         <ion-item >
-            <ion-label>Delete Account</ion-label>
+            <ion-icon name="close-circle-outline" color="tertiary"></ion-icon>
+            <ion-label>&nbsp;&nbsp;Delete Account</ion-label>
             <ion-button color="danger">Delete Account</ion-button>
         </ion-item>
     </ion-list>
