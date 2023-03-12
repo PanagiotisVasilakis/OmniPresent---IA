@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
-import { AuthService } from 'src/app/services/auth.service';
+// import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as L from 'leaflet';
 import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
@@ -10,7 +10,7 @@ import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
-import { Storage } from '@ionic/storage';
+// import { Storage } from '@ionic/storage';
 
 
 
@@ -37,35 +37,23 @@ export class InsideAppComponent implements OnInit{
   endL: string;
   routes: any[] = [];
   savedRoutes: any[] = [];
-  latitude: number;
-  longitude: number;
+  latitudeNow: number;
+  longitudeNow: number;
   isEmergencyContactAdd: boolean = false;
   iosOrAndroid: boolean;
   emergencyContacts: Array<{ name: string, number: string }> = [];
   emergencyContactName: string;
   emergencyContactNumber: string;
 
-
-  // startLocation: string;
-  // endLocation: string;
-  // date: Date;
-  // routeData = {
-  //   startLocation: '',
-  //   endLocation: '',
-  //   date: new Date()
-  // };
-  // DBURL = environment.url;
-
- 
   constructor(
     private platform: Platform,
     private statusBar: StatusBar,
     public http: HttpClient,
     private splashScreen: SplashScreen,
-    private authService: AuthService,
+    // private authService: AuthService,
     private sqLiteDatabaseService: SqLiteDatabaseService,
     private geolocation: Geolocation,
-    private storage: Storage
+    // private storage: Storage
     // private routeService: RouteService
     ) {
     this.initializeApp();
@@ -305,31 +293,36 @@ export class InsideAppComponent implements OnInit{
     }
   }
 
-  sendEmergencySMS() {
-    // Retrieve emergency contacts array from local storage
-    this.storage.get('emergencyContacts').then(contacts => {
-      this.emergencyContacts = JSON.parse(contacts);
-      // Get the current location
-      this.geolocation.getCurrentPosition().then((resp) => {
-        this.latitude = resp.coords.latitude;
-        this.longitude = resp.coords.longitude;
+  async sendEmergencySMS() {
+    let result = await this.sqLiteDatabaseService.execute("SELECT * FROM contacts");
+
+    // Get the current location
+    this.geolocation.getCurrentPosition().then((resp) => {
+        this.latitudeNow = resp.coords.latitude;
+        this.longitudeNow = resp.coords.longitude;
     
         // Construct the message body
-        const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitude},${this.longitude}.`;
+        const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitudeNow},${this.longitudeNow}.`;
         
-        for (const element of this.emergencyContacts) {
-          const contact: any = element;
+      // Check if result.values is not empty
+      if (result.values.length > 0) {
+        console.log("there are contacts"+ result.values.length);
+        // Loop through the result.values array
+        for (let contact of result.values) {
+          // Access the name and number properties of each contact object
+          console.log(contact.name);
+          console.log(contact.number);
           SmsManager.send({
               numbers: contact.number,
               text: message,
           }).then(() => {
               // success
-              console.log("success")
+              console.log("success");
           }).catch(error => {
               console.error(error);
           });
         }
-      }) 
+      }
     })
   }
   

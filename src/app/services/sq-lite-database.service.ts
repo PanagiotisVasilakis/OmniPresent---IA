@@ -17,7 +17,6 @@ export class SqLiteDatabaseService {
       return this.db;
     } 
     else {
-        // await this.createDatabase();
         // Initialize the database
         // Get the connection object
         this.db = await CapacitorSQLite.createConnection({ database: 'RoutesSaved' });
@@ -32,12 +31,36 @@ export class SqLiteDatabaseService {
               longitudeSecond REAL
           );`
         );
+
+        await this.db.execute(`
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            phonenumber INT
+        );`
+      );
+
         console.log('Database created');
-      return this.db as SQLiteDBConnection;
+      return this.db;
     }
  }
 
 
+  //for inserting and updating with prepared statements
+  async run(sql: string, values: any[]) {
+    if (!this.db) {
+      await this.createDatabase();
+    }
+
+    if (values === undefined) {
+      return this.db.run(sql);
+    } else {
+      return this.db.run(sql, values as any);
+  }
+  }
+
+
+  //for selecting and deleting 
   async execute(sql: string, values?: any[]) {
     if (!this.db) {
       await this.createDatabase();
