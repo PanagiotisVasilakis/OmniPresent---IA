@@ -19,6 +19,8 @@ export class ProfilePage implements OnInit {
   emergencyContacts: Array<{ name: string, number: string }> = [];
   emergencyContactName: string;
   emergencyContactNumber: string;
+  showEmail = false;
+  showPassword = false;
   
 
   constructor(

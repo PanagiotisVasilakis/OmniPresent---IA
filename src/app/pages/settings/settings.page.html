@@ -23,37 +23,8 @@
 
 	<ion-content>
 		<ion-list>
-	
-		  <!-- Account Settings -->
-		  <ion-list-header>
-			<ion-label>Account</ion-label>
-		  </ion-list-header>
-		  <ion-item>
-			<ion-text>Change Email</ion-text>
-			<ion-toggle [(ngModel)]="showEmail">
-			  Show Email Address
-			</ion-toggle>
-		  </ion-item>
-		  <ion-item *ngIf="showEmail">
-			<ion-label style="position: relative;">Email Address</ion-label>
-			<ion-input type="email" style="position: absolute; top: 100%;"></ion-input>
-			<ion-button style="position: absolute; top: 100%; right: 0;" (click)="changeEmail()">Change</ion-button>
-		  </ion-item>
-		  <div style="height: 5px;"></div>
-		  <ion-item>
-			<ion-text>Change Password</ion-text>
-			<ion-toggle [(ngModel)]="showPassword">
-			  Show Password
-			</ion-toggle>
-		  </ion-item>
-		  <ion-item *ngIf="showPassword">
-			<ion-label style="position: relative;">Password</ion-label>
-			<ion-input type="password" style="position: absolute; top: 100%;"></ion-input>
-			<ion-button style="position: absolute; top: 100%; right: 0;" (click)="changePassword()">Change</ion-button>
-		  </ion-item>
-	
 		  <!-- Notifications and Privacy Settings -->
-		  <ion-list-header>
+		  <ion-list-header style="font-weight: bold; font-size:larger;">
 			<ion-label>Notifications and Privacy</ion-label>
 		  </ion-list-header>
 		  <ion-item>
@@ -68,7 +39,7 @@
 		  </ion-item>
 	
 		  <!-- Other Settings -->
-		  <ion-list-header>
+		  <ion-list-header style="font-weight: bold; font-size:larger;">
 			<ion-label>Other</ion-label>
 		  </ion-list-header>
 		  <ion-item>
@@ -79,12 +50,7 @@
 				  <ion-content class="ion-padding">tel: 69..... <br> email: p@gmail.com</ion-content>
 				</ng-template>
 			</ion-popover>
-		  </ion-item>
-		  <ion-item>
-			<ion-label>Delete Account</ion-label>
-			<ion-button color="danger">Delete Account</ion-button>
-		  </ion-item>
-	
+		  </ion-item>	
 		</ion-list>
 	  </ion-content>
 
