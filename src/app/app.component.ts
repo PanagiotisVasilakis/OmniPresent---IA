@@ -30,6 +30,15 @@ export class AppComponent implements OnInit{
 		  title: 'Settings',
 		  url: '/settings',
 		  icon: 'settings'
+		},
+		{
+		  title: 'Login',
+		  url: '/login',
+		  icon: 'log-in'
+		},
+		{
+		  title: 'Logout',
+		  icon: 'log-out'
 		}
 	  ];
 
@@ -42,6 +51,10 @@ export class AppComponent implements OnInit{
 		private route: ActivatedRoute
 	) {
 		this.initializeApp();
+	}
+
+	logout(){
+		this.authService.logout();
 	}
 
 	ngOnInit() {

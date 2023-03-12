@@ -334,10 +334,6 @@ export class InsideAppComponent implements OnInit{
   }
   
 
-	logout() {
-		this.authService.logout();
-	}
-
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();

@@ -1,12 +1,16 @@
 <ion-app>
   
-  <ion-menu contentId="main-content" type="overlay" *ngIf="currentRoute !== '/login'">
+  <ion-menu contentId="main-content" type="overlay" >
     <ion-content >
       <ion-list id="inbox-list">
         <ion-note></ion-note>
-        <ion-menu-toggle  auto-hide="false" *ngFor="let pages of Pages; let i = index">
-          <ion-item  (click)="activeIndex = i" routerDirection="root" [routerLink]="[pages.url]" lines="none"
+        <ion-menu-toggle auto-hide="false" *ngFor="let pages of Pages; let i = index">
+          <ion-item (click)="activeIndex = i" routerDirection="root" *ngIf="pages.url" [routerLink]="[pages.url]" lines="none"
             detail="false" [class.selected]="activeIndex === i">
+            <ion-icon slot="start" [ios]="pages.icon + '-outline'" [md]="pages.icon + '-sharp'"></ion-icon>
+            <ion-label>{{ pages.title }}</ion-label>
+          </ion-item>
+          <ion-item (click)="logout()" *ngIf="!pages.url" lines="none">
             <ion-icon slot="start" [ios]="pages.icon + '-outline'" [md]="pages.icon + '-sharp'"></ion-icon>
             <ion-label>{{ pages.title }}</ion-label>
           </ion-item>
@@ -15,7 +19,7 @@
     </ion-content>
   </ion-menu>
 
-  <div class="ion-page" id="main-content" *ngIf="currentRoute !== '/login'"></div>
+  <div class="ion-page" id="main-content" ></div>
   
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

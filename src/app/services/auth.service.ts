@@ -70,7 +70,7 @@ logout() {
     }),
     tap(_ => {
       this.isAuthenticated.next(false);
-      this.router.navigateByUrl('/', { replaceUrl: true });
+      this.router.navigateByUrl('/inside', { replaceUrl: true });
     })
   ).subscribe();
 }
