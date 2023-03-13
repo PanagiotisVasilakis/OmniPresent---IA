@@ -64,8 +64,4 @@ export class ProfilePage implements OnInit {
     this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
   }
 
-  logout() {
-		this.authService.logout();
-	}
-
 }
