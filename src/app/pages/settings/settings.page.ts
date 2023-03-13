@@ -17,10 +17,4 @@ export class SettingsPage implements OnInit {
   ngOnInit() {
   }
 
-
-
-   logout() {
-		this.authService.logout();
-	}
-
 }

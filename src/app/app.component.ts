@@ -65,15 +65,18 @@ export class AppComponent implements OnInit{
 
 	initializeApp() {
 		
-		this.platform.ready().then(() => {
+		this.platform.ready().then(async () => {
 			this.statusBar.styleDefault();
 			this.splashScreen.hide();
-
-			this.authService.isAuthenticated.subscribe((state) => {
-				if (state) {
+			this.authService.isAuthenticated.subscribe(async (state) => {
+				if(await this.router.navigate(['profile'])){
+					if (state) {
+						this.router.navigate(['profile']);
+					} else {
+						this.router.navigate(['login']);
+					}
+				}else{
 					this.router.navigate(['inside']);
-				} else {
-					this.router.navigate(['login']);
 				}
 			});
 		});

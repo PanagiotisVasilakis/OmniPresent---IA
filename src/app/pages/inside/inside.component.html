@@ -25,6 +25,24 @@
           </ion-button>
         </div>
 
+        <!-- <div *ngIf="navigatebutton" class="ionicardforSavedRoutes">
+            <ion-card class="instructions-card" *ngIf="showInstructions">
+              <ion-card-header>
+                Turn-by-Turn Instructions
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list lines="none">
+                  <ion-item *ngFor="let instruction of instructions">
+                    {{ instruction }}
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button>
+        </div> -->
+        <div id="instruction"></div>
+        <div id="distance-and-bearing"></div>
+
         <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
           <ion-card>
             <ion-card-header>
@@ -71,6 +89,7 @@
           </ng-template>
         </ion-modal>
       </div>
+
 
         <div id="functionsBar">
           <ion-button (click)="this.searchForm = !this.searchForm;" id="searchButton" >

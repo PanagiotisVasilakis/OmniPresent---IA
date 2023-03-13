@@ -3,15 +3,14 @@ import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 // import { AuthService } from 'src/app/services/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
 import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
-import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import { Geolocation } from '@capacitor/geolocation';
 import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
-// import { Storage } from '@ionic/storage';
-
+import 'leaflet-geometryutil';
 
 
 @Component({
@@ -44,6 +43,13 @@ export class InsideAppComponent implements OnInit{
   emergencyContacts: Array<{ name: string, number: string }> = [];
   emergencyContactName: string;
   emergencyContactNumber: string;
+
+  // Define a variable to store the current position
+ currentPosition: any;
+ watchId:any;
+
+// Define a variable to store the current instruction index
+ currentInstructionIndex: number = 0;
 
   constructor(
     private platform: Platform,
@@ -197,26 +203,130 @@ export class InsideAppComponent implements OnInit{
     }
 
   
-  navigatebutton() {
+  async navigatebutton() {
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details,route_details&apiKey=${this.myAPIKey}
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}
     this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
-    this.http.get<any>(this.url)
-    .subscribe(calculatedRouteGeoJSON => {
-      console.log(calculatedRouteGeoJSON);
+    // Fetch the response from the API
+  const response = await fetch(this.url);
 
-      this.route = L.geoJSON(calculatedRouteGeoJSON, {
-        style: (_feature) => {
-          return {
-            color: "rgba(20, 137, 255, 0.7)",
-            weight: 5
-          };
-        }
-      });
-      //distance and time
-      this.route.bindPopup((layer: { feature: { properties: { distance: any; distance_units: any; time: any; }; }; }) => {
-        return `${layer.feature.properties.distance} ${layer.feature.properties.distance_units}, ${layer.feature.properties.time}`})
-      this.route.addTo(this.mymap);
+  // Parse the response as JSON
+  const data = await response.json();
+
+  // Check if the response contains a valid route
+  if (data.type === 'FeatureCollection' && data.features.length > 0) {
+    // Store the route and instructions in the variable
+    this.route = data.features[0];
+
+    // Show the first instruction on the screen
+    this.showInstruction(this.route.properties.legs[0].steps[this.currentInstructionIndex].instruction);
+
+    // Start watching the position updates
+    this.watchPosition();
+  } else {
+    // Handle the error if no route is found
+    console.error('No route found');
+  }
+}
+
+// Define a function to watch the position updates from Capacitor Geolocation Plugin
+watchPosition() {
+  // Call the watchPosition method and get a watch ID
+  this.watchId = Geolocation.watchPosition({}, (position, err: any) => {
+    // Check if there is an error
+    if (err) {
+      // Handle the error
+      console.error(err);
+      return;
+    }
+
+    // Check if there is a valid position
+    if (position && position.coords) {
+      // Store the current position in the variable
+      this.currentPosition = position.coords;
+
+      // Compare the current position with the next instruction point
+      this.comparePosition();
+    }
+  });
+}
+
+// Define a function to compare the current position with the next instruction point
+ comparePosition() {
+  // Get the next instruction point coordinates from the route
+  const nextInstructionPoint = this.route.properties.legs[0].steps[this.currentInstructionIndex + 1].location.coordinates;
+
+  // Create Leaflet LatLng objects for the current position and the next instruction point
+  const currentPositionLatLng = L.latLng(this.currentPosition.latitude, this.currentPosition.longitude);
+  const nextInstructionPointLatLng = L.latLng(nextInstructionPoint[1], nextInstructionPoint[0]);
+
+  // Calculate the distance and bearing between the current position and the next instruction point using Leaflet methods
+  const distance = currentPositionLatLng.distanceTo(nextInstructionPointLatLng);
+  const bearing = L.GeometryUtil.bearing(currentPositionLatLng, nextInstructionPointLatLng);
+
+  // Define a threshold for showing the next instruction (in meters)
+  const threshold = 10;
+
+  // Check if the distance is less than or equal to the threshold
+  if (distance <= threshold) {
+    // Increment the current instruction index by one
+    this.currentInstructionIndex++;
+
+    // Show the next instruction on the screen
+    this.showInstruction(this.route.properties.legs[0].steps[this.currentInstructionIndex].instruction);
+
+    // Check if this is the last instruction of the route
+    if (this.currentInstructionIndex === this.route.properties.legs[0].steps.length - 1) {
+      // Stop watching the position updates and show a message that you have reached your destination
+      Geolocation.clearWatch({ id: this.watchId });
+      this.showInstruction('You have reached your destination!');
+    }
+  } else {
+    // Show the distance and bearing to the next instruction point on the screen
+    this.showDistanceAndBearing(distance, bearing);
+  }
+}
+
+// Define a function to show an instruction on the screen (you can modify this according to your UI design)
+ showInstruction(instruction: string) {
+  // Find an element on the screen where you want to show
+  const instructionElement = document.getElementById('instruction') as HTMLElement;
+
+  // Set the text content of the element to the instruction
+  instructionElement.textContent = instruction;
+}
+
+// Define a function to show the distance and bearing to the next instruction point on the screen (you can modify this according to your UI design)
+ showDistanceAndBearing(distance: number, bearing: number) {
+  // Find an element on the screen where you want to show the distance and bearing
+  const distanceAndBearingElement = document.getElementById('distance-and-bearing') as HTMLElement;
+
+  // Format the distance and bearing values to display them nicely
+  const distanceFormatted = Math.round(distance) + ' m';
+  const bearingFormatted = Math.round(bearing) + '°';
+
+  // Set the text content of the element to the distance and bearing values
+  distanceAndBearingElement.textContent = `Distance: ${distanceFormatted}, Bearing: ${bearingFormatted}`;
+}
+
+   
+  
+    // this.http.get<any>(this.url)
+    // .subscribe(calculatedRouteGeoJSON => {
+    //   console.log(calculatedRouteGeoJSON);
+
+    //   this.route = L.geoJSON(calculatedRouteGeoJSON, {
+    //     style: (_feature) => {
+    //       return {
+    //         color: "rgba(20, 137, 255, 0.7)",
+    //         weight: 5
+    //       };
+    //     }
+    //   });
+    //   //distance and time
+    //   this.route.bindPopup((layer: { feature: { properties: { distance: any; distance_units: any; time: any; }; }; }) => {
+    //     return `${layer.feature.properties.distance} ${layer.feature.properties.distance_units}, ${layer.feature.properties.time}`})
+    //   this.route.addTo(this.mymap);
 
       // const turnByTurns: { type: string; geometry: { type: string; coordinates: any; }; properties: { instruction: any; }; }[] = []; // collect all transitions
       // routeResult.features.forEach((feature: { properties: { legs: any[]; }; geometry: { coordinates: { [x: string]: { [x: string]: any; }; }; }; }) => feature.properties.legs.forEach((leg: { steps: any[]; }, legIndex: string | number) => leg.steps.forEach((step: { from_index: string | number; instruction: { text: any; }; }) => {
@@ -243,8 +353,7 @@ export class InsideAppComponent implements OnInit{
       // }).bindPopup((layer) => {
       //   return `${layer.feature.properties.instruction}`
       // }).addTo(this.mymap);
-    });
-  }
+    // });
   
 
   async LoadSavedRoutes() {
@@ -295,35 +404,46 @@ export class InsideAppComponent implements OnInit{
 
   async sendEmergencySMS() {
     let result = await this.sqLiteDatabaseService.execute("SELECT * FROM contacts");
-
-    // Get the current location
-    this.geolocation.getCurrentPosition().then((resp) => {
-        this.latitudeNow = resp.coords.latitude;
-        this.longitudeNow = resp.coords.longitude;
+      
+    this.geolocation.getCurrentPosition(
+      response => {
+        this.latitudeNow = response.coords.latitude;
+        this.longitudeNow = response.coords.longitude;
+      },
+      error => {
+        console.error(error);
+      },
+      { enableHighAccuracy: true }
+    );
     
-        // Construct the message body
-        const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitudeNow},${this.longitudeNow}.`;
-        
-      // Check if result.values is not empty
-      if (result.values.length > 0) {
-        console.log("there are contacts"+ result.values.length);
-        // Loop through the result.values array
-        for (let contact of result.values) {
-          // Access the name and number properties of each contact object
-          console.log(contact.name);
-          console.log(contact.number);
+      
+    // Construct the message body
+    const message = `EMERGENCY: Please help! I am in danger. My location is https://www.google.com/maps/place/${this.latitudeNow},${this.longitudeNow}.`;
+  
+    // Check if result.values is not empty
+    if (result.values.length > 0) {
+      console.log("there are contacts"+ result.values.length);
+      // Loop through the result.values array
+      for (let contact of result.values) {
+        // Access the name and number properties of each contact object
+        console.log(contact.name);
+        console.log(contact.number);
+        // Wrap SmsManager.send in a promise
+        let smsPromise = new Promise(() => {
           SmsManager.send({
-              numbers: contact.number,
-              text: message,
-          }).then(() => {
-              // success
-              console.log("success");
-          }).catch(error => {
-              console.error(error);
+            numbers: contact.number,
+            text: message,
           });
+        });
+        // Await the promise and handle errors
+        try {
+          await smsPromise;
+          console.log("success");
+        } catch (error) {
+          console.error(error);
         }
       }
-    })
+    }
   }
   
 
