@@ -32,6 +32,7 @@ export class InsideAppComponent implements OnInit{
   url:string;
   input2:HTMLElement | null;
   route: L.Layer | any;
+  routeLayer: L.Layer | any;
   startL: string;
   endL: string;
   routes: any[] = [];
@@ -202,32 +203,43 @@ export class InsideAppComponent implements OnInit{
       }
     }
 
+    // Define a function to display the map
+  displayMap() {
+    // Create a Leaflet map object centered at the starting point of the route
+    this.mymap.setView([this.latholder1, this.lonholder1], 13);
+    // Create a GeoJSON layer with the route data and add it to the map
+    this.routeLayer = L.geoJSON(this.route);
+    this.routeLayer.addTo(this.mymap);
+  }
   
   async navigatebutton() {
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details,route_details&apiKey=${this.myAPIKey}
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}
     this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
     // Fetch the response from the API
-  const response = await fetch(this.url);
+    const response = await fetch(this.url);
 
-  // Parse the response as JSON
-  const data = await response.json();
+    // Parse the response as JSON
+    const data = await response.json();
 
-  // Check if the response contains a valid route
-  if (data.type === 'FeatureCollection' && data.features.length > 0) {
-    // Store the route and instructions in the variable
-    this.route = data.features[0];
+    // Check if the response contains a valid route
+    if (data.type === 'FeatureCollection' && data.features.length > 0) {
+      // Store the route and instructions in the variable
+      this.route = data.features[0];
 
-    // Show the first instruction on the screen
-    this.showInstruction(this.route.properties.legs[0].steps[this.currentInstructionIndex].instruction);
+      // Show the first instruction on the screen
+      this.showInstruction(this.route.properties.legs[0].steps[this.currentInstructionIndex].instruction);
 
-    // Start watching the position updates
-    this.watchPosition();
-  } else {
-    // Handle the error if no route is found
-    console.error('No route found');
+      // Display the map and add the route layer
+      this.displayMap();
+
+      // Start watching the position updates
+      this.watchPosition();
+    } else {
+      // Handle the error if no route is found
+      console.error('No route found');
+    }
   }
-}
 
 // Define a function to watch the position updates from Capacitor Geolocation Plugin
 watchPosition() {
@@ -253,9 +265,18 @@ watchPosition() {
 
 // Define a function to compare the current position with the next instruction point
  comparePosition() {
-  // Get the next instruction point coordinates from the route
-  const nextInstructionPoint = this.route.properties.legs[0].steps[this.currentInstructionIndex + 1].location.coordinates;
+  // Check if the route and current instruction index are defined
+  if (!this.route || !this.route.properties || !this.route.properties.legs || !this.route.properties.legs[0].steps || !this.route.properties.legs[0].steps[this.currentInstructionIndex + 1]) {
+    return;
+  }
 
+  // Get the next instruction point coordinates from the route
+  const nextInstructionPoint = this.route.properties.legs[0].steps[this.currentInstructionIndex + 1].location;
+
+  // Check if the next instruction point coordinates are defined
+  if (!nextInstructionPoint || !nextInstructionPoint.coordinates) {
+    return;
+  }        
   // Create Leaflet LatLng objects for the current position and the next instruction point
   const currentPositionLatLng = L.latLng(this.currentPosition.latitude, this.currentPosition.longitude);
   const nextInstructionPointLatLng = L.latLng(nextInstructionPoint[1], nextInstructionPoint[0]);
@@ -288,26 +309,42 @@ watchPosition() {
 }
 
 // Define a function to show an instruction on the screen (you can modify this according to your UI design)
- showInstruction(instruction: string) {
+ showInstruction(instruction: any) {
   // Find an element on the screen where you want to show
   const instructionElement = document.getElementById('instruction') as HTMLElement;
 
   // Set the text content of the element to the instruction
-  instructionElement.textContent = instruction;
+  instructionElement.textContent = instruction.text;
 }
 
-// Define a function to show the distance and bearing to the next instruction point on the screen (you can modify this according to your UI design)
- showDistanceAndBearing(distance: number, bearing: number) {
-  // Find an element on the screen where you want to show the distance and bearing
-  const distanceAndBearingElement = document.getElementById('distance-and-bearing') as HTMLElement;
+showDistanceAndBearing(distance: number, bearing: number) {
+  const distanceElement = document.getElementById('distance') as HTMLElement;
+  const bearingElement = document.getElementById('bearing') as HTMLElement;
+  const remainingDistanceElement = document.getElementById('remaining-distance') as HTMLElement;
 
-  // Format the distance and bearing values to display them nicely
-  const distanceFormatted = Math.round(distance) + ' m';
-  const bearingFormatted = Math.round(bearing) + '°';
+  distanceElement.textContent = `Distance to next instruction: ${distance.toFixed(2)} meters`;
+  bearingElement.textContent = `Bearing: ${bearing.toFixed(2)} degrees`;
 
-  // Set the text content of the element to the distance and bearing values
-  distanceAndBearingElement.textContent = `Distance: ${distanceFormatted}, Bearing: ${bearingFormatted}`;
+  if (this.route && this.route.properties && this.route.properties.distance) {
+    const totalDistance = this.route.properties.distance;
+    const remainingDistance = totalDistance - distance;
+    remainingDistanceElement.textContent = `Remaining distance: ${remainingDistance.toFixed(2)} meters`;
+  }
 }
+
+
+// // Define a function to show the distance and bearing to the next instruction point on the screen (you can modify this according to your UI design)
+//  showDistanceAndBearing(distance: number, bearing: number) {
+//   // Find an element on the screen where you want to show the distance and bearing
+//   const distanceAndBearingElement = document.getElementById('distance-and-bearing') as HTMLElement;
+
+//   // Format the distance and bearing values to display them nicely
+//   const distanceFormatted = Math.round(distance) + ' m';
+//   const bearingFormatted = Math.round(bearing) + '°';
+
+//   // Set the text content of the element to the distance and bearing values
+//   distanceAndBearingElement.textContent = `Distance: ${distanceFormatted}, Bearing: ${bearingFormatted}`;
+// }
 
    
   
@@ -383,10 +420,15 @@ watchPosition() {
   
 
   deleteRoute(){
-    if (this.route) {
-      // remove previously added route
-      this.mymap.removeLayer(this.route);
+    // Check if the map and routeLayer are defined
+    if (this.mymap && this.routeLayer) {
+      // Remove the routeLayer from the map
+      this.mymap.removeLayer(this.routeLayer);
+
+      // Set the routeLayer variable to null
+      this.routeLayer = null;
     }
+
     // clear latholder and lonholder values
     this.latholder1 = 0.000000;
     this.lonholder1 = 0.000000;
@@ -413,7 +455,7 @@ watchPosition() {
       error => {
         console.error(error);
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout:15000 }
     );
     
       

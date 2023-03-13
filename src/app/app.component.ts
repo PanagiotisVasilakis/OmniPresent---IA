@@ -6,6 +6,8 @@ import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { AuthService } from './services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
 	selector: 'app-root',
@@ -48,7 +50,8 @@ export class AppComponent implements OnInit{
 		private statusBar: StatusBar,
 		private authService: AuthService,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private toastr: ToastrService
 	) {
 		this.initializeApp();
 	}
@@ -58,27 +61,58 @@ export class AppComponent implements OnInit{
 	}
 
 	ngOnInit() {
-		this.route.url.pipe(map(url => url[0].path)).subscribe(path => {
-		  this.currentRoute = path;
+		this.route.url.pipe(
+		  map(url => url[0].path)
+		).subscribe(path => {
+		  if (path === '/profile') {
+			this.authService.isAuthenticated.subscribe(state => {
+			  if (state) {
+				this.router.navigate(['profile']);
+			  } else {
+				this.router.navigate(['login']);
+				this.toastr.warning('Please login to access your account');
+			  }
+			});
+		  }
 		});
 	  }
+	  
+
+	// ngOnInit() {
+	// 	this.route.url.pipe(map(url => url[0].path)).subscribe(path => {
+	// 	  this.currentRoute = path;
+	// 	});
+	// 	if(this.currentRoute === '/profile'){
+	// 		this.authService.isAuthenticated.subscribe( (state) => {
+	// 			if (state) {
+	// 				this.router.navigate(['profile']);
+	// 			} else {
+	// 				this.router.navigate(['login']);
+	// 			}
+	// 		});
+	// 	}else{
+	// 		this.router.navigate(['inside']);
+	// 		this.toastr.success('Login to use Account page');
+	// 	}
+	//   }
 
 	initializeApp() {
 		
-		this.platform.ready().then(async () => {
+		this.platform.ready().then( () => {
 			this.statusBar.styleDefault();
 			this.splashScreen.hide();
-			this.authService.isAuthenticated.subscribe(async (state) => {
-				if(await this.router.navigate(['profile'])){
-					if (state) {
-						this.router.navigate(['profile']);
-					} else {
-						this.router.navigate(['login']);
-					}
-				}else{
-					this.router.navigate(['inside']);
-				}
-			});
+			// if(await this.currentRoute === '/profile'){
+			// 	this.authService.isAuthenticated.subscribe(async (state) => {
+			// 		if (state) {
+			// 			this.router.navigate(['profile']);
+			// 		} else {
+			// 			this.router.navigate(['login']);
+			// 		}
+			// 	});
+			// }else{
+			// 	this.router.navigate(['inside']);
+			// 	this.toastr.success('Login to use Account page');
+			// }
 		});
 	}
 }

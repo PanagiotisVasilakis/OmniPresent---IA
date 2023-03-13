@@ -14,6 +14,8 @@ import { Storage }  from '@ionic/storage';
 import { IonicStorageModule }  from '@ionic/storage-angular'; 
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 // import * as Sqlite from '@capacitor-community/sqlite';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 
 export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
@@ -33,6 +35,8 @@ export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
 		IonicModule.forRoot(),
 		AppRoutingModule,
 		HttpClientModule,
+		BrowserAnimationsModule,
+    	ToastrModule.forRoot(),
 		IonicStorageModule.forRoot(),
 		JwtModule.forRoot({
 			jwtOptionsProvider: {
