@@ -150,7 +150,7 @@ export class InsideAppComponent implements OnInit{
             input2, 
             '7ab20422eadd4008be20a8274432337d', 
             <GeocoderAutocompleteOptions>{ 
-              language: 'en',  
+              language: 'el',  
               types: ['locality'], 
               allowNonVerifiedHouseNumber: true,
               allowNonVerifiedStreet: true,
@@ -173,16 +173,38 @@ export class InsideAppComponent implements OnInit{
           autocomplete.on('select', (location) => {
             console.log(location);
 
+
+        // setLocationButton.addEventListener("click", () => {
+        //   const input2 = document.getElementById("input2")  as HTMLElement;
+        //   (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+        // });
+
+                    // Update the input2 value when the button is clicked
+        const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
+
             if(i===0){
               this.latholder1 = location.properties.lat;
               this.lonholder1 = location.properties.lon;
               this.startL = location.properties.name;
+
+              setLocationButton.addEventListener("click", () => {
+                const input2 = document.getElementById("input2")  as HTMLElement;
+                (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+                this.latholder2 = this.currentPosition.latitude;
+                this.lonholder2 = this.currentPosition.longitude;
+              });
 
             } else if(i === 1){
               this.latholder2 = location.properties.lat;
               this.lonholder2 = location.properties.lon;
               this.endL = location.properties.name;
 
+              setLocationButton.addEventListener("click", () => {
+                const input2 = document.getElementById("input2")  as HTMLElement;
+                (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+                this.latholder2 = this.currentPosition.latitude;
+                this.lonholder2 = this.currentPosition.longitude;
+              });
 
               //SAVE ROUTES BY CLICK              
               // Add this line of code to get a reference to the save button element
@@ -197,7 +219,17 @@ export class InsideAppComponent implements OnInit{
                   [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
                 );
               });
-            }          
+            }                    
+            // // Get a reference to the input element for this loop iteration
+            // const input = document.getElementById(`autocomplete${i + 1}`) as HTMLInputElement;
+
+            // // Get a reference to the button element for this loop iteration
+            // const setLocationButton = document.getElementById(`set-location-button-${i + 1}`) as HTMLElement;
+
+            // // Add an event listener to the button that sets the input value to the current position
+            // setLocationButton.addEventListener("click", () => {
+            //   input.value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+            // });
           });
         }
       }
@@ -241,27 +273,27 @@ export class InsideAppComponent implements OnInit{
     }
   }
 
-// Define a function to watch the position updates from Capacitor Geolocation Plugin
-watchPosition() {
-  // Call the watchPosition method and get a watch ID
-  this.watchId = Geolocation.watchPosition({}, (position, err: any) => {
-    // Check if there is an error
-    if (err) {
-      // Handle the error
-      console.error(err);
-      return;
-    }
+  // Define a function to watch the position updates from Capacitor Geolocation Plugin
+  watchPosition() {
+    // Call the watchPosition method and get a watch ID
+    this.watchId = Geolocation.watchPosition({}, (position, err: any) => {
+      // Check if there is an error
+      if (err) {
+        // Handle the error
+        console.error(err);
+        return;
+      }
 
-    // Check if there is a valid position
-    if (position && position.coords) {
-      // Store the current position in the variable
-      this.currentPosition = position.coords;
+      // Check if there is a valid position
+      if (position && position.coords) {
+        // Store the current position in the variable
+        this.currentPosition = position.coords;
 
-      // Compare the current position with the next instruction point
-      this.comparePosition();
-    }
-  });
-}
+        // Compare the current position with the next instruction point
+        this.comparePosition();
+      }
+    });
+  }
 
 // Define a function to compare the current position with the next instruction point
  comparePosition() {
