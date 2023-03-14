@@ -1,23 +1,42 @@
 @import "~@geoapify/geocoder-autocomplete/styles/minimal.css";
 
 
-#autocomplete1{
+ #autocomplete1{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    z-index: 9999;
+    position: fixed;
+    align-items: center;
+    top: 5%;
+    left: 15%;
+    background-color: rgba(0, 0, 0, 0.459);
+    max-height: auto;
+ }
+
+ #autocomplete2{
   padding: 10px;
-  font-size: 16px;
+  // font-size: auto;
   border-radius: 10px;
   border: none;
   font-weight: bold;
   z-index: 9999;
-  position: absolute;
+  position: fixed;
   align-items: center;
-  top: 15px;
-  left: 32px;
-  right: 28px;
+  top: 15%;
+  left: 5%;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
+  width: 90%;
 }
 
-#autocomplete2{
+.geoapify-autocomplete-input{
+  font-size: 16px;
+  width: auto;
+}
+
+.navigationFeatures{
   padding: 10px;
   width: 90%;
   // font-size: auto;
@@ -29,10 +48,13 @@
   align-content: center;
   align-items: center;
   top: 5%;
-  left:5%;
+  left: 5%;
   background-color: rgba(0, 0, 0, 0.459);
-  max-height: auto;
-}
+} 
+
+
+
+
 
 .leaflet-control-layers label {
   color: #33333363;
@@ -52,36 +74,39 @@
 .saveRoute{
   --background: #121212a9;
   position: relative;
-  width: 22.5%;
-  height: 25px;
+  width: 23%;
+  height: 30px;
 }
 
 .SetCurrentLoc{
   --background: #121212a9;
-  position: relative;
-  width: 22.5%;
-  height: 25px;
+  width: 22%;
+  height: 40px;
+  z-index: 9999;
+  top: 16.5%;
+  right: 5%;
+  position: fixed;
 }
 
 #displayroute{
   --background: #121212a9;
   position: relative;
-  width: 22.5%;
-  height: 25px;
+  width: 23%;
+  height: 30px;
 }
 
 #deleteRoute{
   --background: #121212a9;
   position: relative;
-  width: 22.5%;
-  height: 25px;
+  width: 23%;  
+  height: 30px;
 }
 
 #navButton{
   --background: #121212a9;
   position: relative;
-  width: 22.5%;
-  height: 25px;
+  width: 23%;
+  height: 30px;
 }
 
 
@@ -139,6 +164,14 @@
   height: 25px;
 }
 
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+}
+
 #logoutButton{
   --background: #121212;
   --color: #428cff;
@@ -151,7 +184,7 @@
 }
 
 .ionicardforSavedRoutes{
-  padding: 5px;
+  padding: 2px;
   width: 90%;
   // font-size: auto;
   border-radius: 10px;
@@ -162,9 +195,51 @@
   align-content: center;
   align-items: center;
   top: 30%;
-  left:5%;
+  left: 2%;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
+}
+
+.ionicardforInstructionsRoutes {
+  padding: 0;
+  width: 90%;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  z-index: 9999;
+  position: fixed;
+  top: 30%;
+  left: 2%;
+  background-color: rgba(0, 0, 0, 0.459);
+  max-height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ionicardforInstructionsRoutes .ion-button {
+  color: white;
+  background-color: #007bff;
+  margin-right: 5px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+}
+
+.ionicardforInstructionsRoutes .ion-button:first-child {
+  margin-right: 0;
+}
+
+.ionicardforInstructionsRoutes .ion-button:hover {
+  background-color: #0069d9;
+}
+
+.ionicardforInstructionsRoutes .card-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 10px;
 }
 
 ion-modal {

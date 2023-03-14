@@ -67,15 +67,7 @@ export class InsideAppComponent implements OnInit{
     this.initializeApp();
   }
 
-  async ngOnInit() {
-    const info: DeviceInfo = await Device.getInfo();
-    this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
-
-    //map initialization 
-    this.mymap = L.map('map', {
-      zoomControl: false
-    }).setView([ 38.246639, 21.734573], 11);
-
+  private initializeMap() {
     //osm layer
     let osm = L.tileLayer('https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=7ab20422eadd4008be20a8274432337d', {
       id: 'osm-bright'
@@ -174,14 +166,8 @@ export class InsideAppComponent implements OnInit{
           autocomplete.on('select', (location) => {
             console.log(location);
 
-
-        // setLocationButton.addEventListener("click", () => {
-        //   const input2 = document.getElementById("input2")  as HTMLElement;
-        //   (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-        // });
-
                     // Update the input2 value when the button is clicked
-        const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
+          const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
 
             if(i===0){
               this.latholder1 = location.properties.lat;
@@ -189,10 +175,10 @@ export class InsideAppComponent implements OnInit{
               this.startL = location.properties.name;
 
               setLocationButton.addEventListener("click", () => {
-                const input2 = document.getElementById("input2")  as HTMLElement;
-                (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-                this.latholder2 = this.currentPosition.latitude;
-                this.lonholder2 = this.currentPosition.longitude;
+                // const input2 = document.getElementById("input2")  as HTMLElement;
+                // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+                this.latholder1 = this.currentPosition.latitude;
+                this.lonholder1 = this.currentPosition.longitude;
               });
 
             } else if(i === 1){
@@ -201,8 +187,8 @@ export class InsideAppComponent implements OnInit{
               this.endL = location.properties.name;
 
               setLocationButton.addEventListener("click", () => {
-                const input2 = document.getElementById("input2")  as HTMLElement;
-                (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+                // const input2 = document.getElementById("input2")  as HTMLElement;
+                // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
                 this.latholder2 = this.currentPosition.latitude;
                 this.lonholder2 = this.currentPosition.longitude;
               });
@@ -234,6 +220,20 @@ export class InsideAppComponent implements OnInit{
           });
         }
       }
+  }
+
+
+  async ngOnInit() {
+    const info: DeviceInfo = await Device.getInfo();
+    this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
+
+      //map initialization 
+      this.mymap = L.map('map', {
+        zoomControl: false
+      }).setView([ 38.246639, 21.734573], 11);
+   
+    this.initializeMap();
+    
     }
 
     // Define a function to display the map
@@ -544,6 +544,18 @@ showDistanceAndBearing(distance: number, bearing: number) {
   }
   
 
+  minimize() {
+    // set the height of the card content to 0
+    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
+    cardContent.style.height = '0';
+  }
+  
+  expand() {
+    // reset the height of the card content to its original value
+    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
+    cardContent.style.height = '';
+  }
+  
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();

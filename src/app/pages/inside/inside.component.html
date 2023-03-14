@@ -6,86 +6,119 @@
 
       <ion-content>
 
-        <div id="map" style="width:100%; height: 85%;"></div>
+        <div id="map" style="width:100%; height: 92%;"></div>
 
-        <div id="autocomplete1" [hidden]="searchForm"></div>
-        
-        <div id="autocomplete2" [hidden]="navForm">
-          <ion-button (click)="navigatebutton()" id="navButton">
-            <ion-icon slot="icon-only" name="navigate" style="font-size: 90%;"></ion-icon>
-          </ion-button>
-          <ion-button id="set-location-button" class="SetCurrentLoc">SetLocation</ion-button>
-          <ion-button  (click)="deleteRoute()" id="deleteRoute">
-            <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
-          </ion-button>
-          <ion-button class="saveRoute" id="saveButton">
-            <ion-icon slot="icon-only" name="save" style="font-size: 90%;"></ion-icon>
-          </ion-button>
-          <ion-button (click)="toggleSavedRoutes()" id="displayroute">
-            <ion-icon slot="icon-only" name="star" style="font-size: 90%;"></ion-icon>
-          </ion-button>
-        </div>
+        <form class="form-container">
 
-        <ng-container *ngIf="showDiv">
-          <ion-card class="ionicardforSavedRoutes">
-            <ion-card-content>
-              <div id="instruction"></div>
-              <div id="distance"></div>
-              <div id="bearing"></div>
-              <div id="remaining-distance"></div>
-            </ion-card-content>
-          </ion-card>
-        </ng-container>
-        
-      <!-- <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button> -->
+          <div id="autocomplete1" [hidden]="searchForm"></div>
+
+                 
+          <div id="autocomplete2" [hidden]="navForm"></div>
+          <div [hidden]="navForm"> 
+              <ion-button  id="set-location-button" class="SetCurrentLoc">
+                <ion-icon slot="icon-only" name="pin-outline" style="font-size: 90%;"></ion-icon>
+              </ion-button>
+          </div>  
+
+          <div class="navigationFeatures" [hidden]="navForm"> 
+            <ion-button (click)="navigatebutton()" id="navButton">
+              <ion-icon slot="icon-only" name="navigate" style="font-size: 90%;"></ion-icon>
+            </ion-button>
+            <ion-button  (click)="deleteRoute()" id="deleteRoute">
+              <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
+            </ion-button>
+            <ion-button class="saveRoute" id="saveButton">
+              <ion-icon slot="icon-only" name="save" style="font-size: 90%;"></ion-icon>
+            </ion-button>
+            <ion-button (click)="toggleSavedRoutes()" id="displayroute">
+              <ion-icon slot="icon-only" name="star" style="font-size: 90%;"></ion-icon>
+            </ion-button>
+          </div>
 
 
-        <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Saved Routes</ion-card-title>
-            </ion-card-header>
-          
-            <ion-card-content>
-              <ion-list lines="inset" *ngFor="let route of savedRoutes">
-                <ion-item>
-                  {{ route.name }}
-                  <ion-button (click)="deleteDatabaseRoute(route.id)">
-                    <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
-                  </ion-button>
+          <ng-container *ngIf="showDiv">
+            <ion-card class="ionicardforInstructionsRoutes" draggable="true">
+              <ion-card-header>
+                <ion-button class="ion-button" slot="end" (click)="minimize()">-</ion-button>
+                <ion-button class="ion-button" slot="end" (click)="expand()">+</ion-button>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-item style="font-weight: bold;">
+                  <div id="instruction" style="font-weight: bold;"></div>
                 </ion-item>
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
+                <ion-item style="font-weight: bold;">
+                  <div id="distance" style="font-weight: bold;"></div>                
+                  <div id="bearing" style="font-weight: bold;"></div>
+                  <div id="remaining-distance" style="font-weight: bold;"></div>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+
+          <!-- <ng-container *ngIf="showDiv">
+            <ion-card class="ionicardforSavedRoutes">
+              <ion-card-content>
+                <ion-item style="font-weight: bold;">
+                <div id="instruction" style="font-weight: bold;"></div>
+                <div id="distance" style="font-weight: bold;"></div>
+                <div id="bearing" style="font-weight: bold;"></div>
+                <div id="remaining-distance" style="font-weight: bold;"></div>
+              </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ng-container> -->
+          
+        <!-- <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button> -->
+
+
+          <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Saved Routes</ion-card-title>
+              </ion-card-header>
+            
+              <ion-card-content>
+                <ion-list lines="inset" *ngFor="let route of savedRoutes">
+                  <ion-item>
+                    {{ route.name }}
+                    <ion-button (click)="deleteDatabaseRoute(route.id)">
+                      <ion-icon slot="icon-only" name="trash" style="font-size: 90%;"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <div>
+          <ion-modal
+            trigger="open-modal"
+            [initialBreakpoint]="0.5"
+            [breakpoints]="[0, 0.25, 0.5, 0.75]"
+            handleBehavior="cycle"
+          >
+            <ng-template>
+              <ion-content class="ion-padding">
+                <div class="ion-card-share">
+                  <ion-toolbar>
+                    <ion-title style="text-align: center;">Share and Care</ion-title>
+                  </ion-toolbar>
+                  <ion-card >
+                    <ion-card-header style="display: flex; justify-content: center;">
+                      <ion-card-title style="font-size: 114%; float: left;">Emergency Location Share</ion-card-title>
+                    </ion-card-header>
+                    <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger" style="font-size: 90%; display: flex; justify-content: center;">
+                      &nbsp;via sms
+                      <ion-icon slot="icon-only" name="mail"></ion-icon>
+                    </ion-button>
+                  </ion-card>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
         </div>
 
-        <div>
-        <ion-modal
-          trigger="open-modal"
-          [initialBreakpoint]="0.5"
-          [breakpoints]="[0, 0.25, 0.5, 0.75]"
-          handleBehavior="cycle"
-        >
-          <ng-template>
-            <ion-content class="ion-padding">
-              <div class="ion-card-share">
-                <ion-toolbar>
-                  <ion-title style="text-align: center;">Share and Care</ion-title>
-                </ion-toolbar>
-                <ion-card >
-                  <ion-card-header style="display: flex; justify-content: center;">
-                    <ion-card-title style="font-size: 114%; float: left;">Emergency Location Share</ion-card-title>
-                  </ion-card-header>
-                  <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger" style="font-size: 90%; display: flex; justify-content: center;">
-                    &nbsp;via sms
-                    <ion-icon slot="icon-only" name="mail"></ion-icon>
-                  </ion-button>
-                </ion-card>
-              </div>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
-      </div>
+      </form>
 
 
         <div id="functionsBar">

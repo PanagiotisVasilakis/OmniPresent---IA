@@ -22,8 +22,13 @@ export class LoginPage implements OnInit {
 			password: ['', [Validators.required, Validators.minLength(6)]]
 		});
 	}
+
 	ngOnInit(){
-	}
+		if (this.authService.isAuthenticated.getValue()) {
+		  alert('You are already authenticated');
+		}
+	  }
+	  
 
 	onSubmit() {
 		this.authService.login(this.credentialsForm.value).subscribe();
