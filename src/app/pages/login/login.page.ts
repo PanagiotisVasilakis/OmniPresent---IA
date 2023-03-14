@@ -15,6 +15,8 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
 	credentialsForm: FormGroup;
+	stayLoggedIn = false;
+
 
 	constructor(private formBuilder: FormBuilder, private authService: AuthService, private loadingController: LoadingController,  private alertController: AlertController, private router: Router) { 
 		this.credentialsForm = this.formBuilder.group({
@@ -41,14 +43,14 @@ export class LoginPage implements OnInit {
 	  
 
 	onSubmit() {
-		this.authService.login(this.credentialsForm.value).subscribe();
+		this.authService.login(this.credentialsForm.value, this.stayLoggedIn).subscribe();
 	}
 
-	async login() {
+	async login(stayLoggedIn: boolean = false) {
 		const loading = await this.loadingController.create();
 		await loading.present();
 	
-		this.authService.login({ credentials: this.credentialsForm.value }).subscribe({
+		this.authService.login({ credentials: this.credentialsForm.value }, stayLoggedIn).subscribe({
 		  next : async _ => {
 			await loading.dismiss();
 			this.router.navigateByUrl('/inside', { replaceUrl: true });

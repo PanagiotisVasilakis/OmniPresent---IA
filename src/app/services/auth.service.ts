@@ -11,6 +11,11 @@ import { AlertController } from '@ionic/angular';
 
 const ACCESS_TOKEN_KEY = 'my-access-token';
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
+interface SetOptions {
+  key: string;
+  value: string;
+  expiration?: string | number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +23,10 @@ const REFRESH_TOKEN_KEY = 'my-refresh-token';
 export class AuthService {
   // Init with null to filter out the first value in a guard!
   isAuthenticated: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
-  currentAccessToken: string = null as any;
+  currentAccessToken: string | null = null;
   url = environment.url;
+
+  
 
   constructor(private http: HttpClient, private alertController: AlertController, private router: Router) {
     this.loadToken();
@@ -41,13 +48,14 @@ export class AuthService {
   signUp(credentials: {email: any, password: any}): Observable<any> {
     return this.http.post(`${this.url}/register`, credentials);
   }
-
+  
   // Sign in a user and store access and refres token
-  login({ credentials }: { credentials: { email: any; password: any; }; }): Observable<any> {
+  login({ credentials }: { credentials: { email: any; password: any; }; }, stayLoggedIn: boolean): Observable<any> {
     return this.http.post<{accessToken: any, refreshToken: any}>(`${this.url}/login`, credentials).pipe(
       switchMap((tokens: {accessToken: string, refreshToken: any }) => {
         this.currentAccessToken = tokens.accessToken;
-        const storeAccess = Preferences.set({key: ACCESS_TOKEN_KEY, value: tokens.accessToken});
+        const options = { key: ACCESS_TOKEN_KEY, value: tokens.accessToken, expiration: stayLoggedIn ? -1 : 3600 } as SetOptions; 
+        const storeAccess = Preferences.set(options);
         const storeRefresh = Preferences.set({key: REFRESH_TOKEN_KEY, value: tokens.refreshToken});
         return from(Promise.all([storeAccess, storeRefresh]));
       }),

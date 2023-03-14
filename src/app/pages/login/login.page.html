@@ -1,24 +1,31 @@
 
   <ion-content id = "content">
-	
+
 	
 	<form (ngSubmit)="login()" [formGroup]="credentialsForm" class="form-container">
-		<div>
-			<ion-img src="assets/icon/Omnipresent(2).png" class="logo2" ></ion-img>
-		</div>
+		<ion-item class="logo2" >
+			<ion-img src="assets/icon/Omnipresent(2).png"></ion-img>
+		</ion-item>
 
 	  	<div class="form-group">
+			
 			<ion-item class="form-control">
 				<ion-input placeholder="Email" formControlName="email"></ion-input>
 			</ion-item>
 				<ion-item class="form-control">
 				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
+
 	  	</div>
 
+		<ion-item class="stayLogInBox">
+			<ion-checkbox [(ngModel)]="stayLoggedIn" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+			<ion-label>&nbsp;&nbsp;Stay Logged In</ion-label>
+		</ion-item>
 	  
 		<ion-button type="submit" expand="block" class="btn btn-primary" [disabled]="!credentialsForm.valid">Log in</ion-button>
 		<ion-button type="button" expand="block" class="btn btn-secondary" (click)="signUp()">Sign up!</ion-button>
+		<div style="height: 10%;"></div>
 		<div id="menuplaceButton"> <ion-menu-button id="menuButton"></ion-menu-button></div>
 	</form>
 

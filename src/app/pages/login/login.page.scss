@@ -5,13 +5,18 @@
 
 
     .logo2{
-        width: 100%;
+        width: fit-content;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+        height: fit-content;
+        --background: #010015;
     }
 
     .form-container {
         display: flex;
         align-items: center;
-        justify-content: center;
+        // justify-content: center;
         height: 100%;
         flex-direction: column;
         width: 100%;
@@ -20,11 +25,9 @@
     .form-group {
         width: 90%;
         text-align: center;
-        margin-bottom: 8%;
     }
     
     .form-control {
-        top: 5%;
         margin: 6% 0;
         width: 100%;
         padding: 0px;
@@ -35,9 +38,7 @@
     .btn {
         width: 50%;
         padding: 5px;
-        border-radius: 10px;
-        margin: 3% 0;
-        
+        border-radius: 10px;        
         font-weight: bold;
         text-transform: uppercase;
         box-shadow: 0px 0px 10px rgb(6, 6, 6);
@@ -58,4 +59,25 @@
     .btn:disabled {
         background-color: #ccc;
         color: rgb(0, 0, 0);
+    }
+
+    #menuplaceButton {
+        width:110%;
+        border-radius: 45%;
+        background: #121212;
+        color: #428cff;
+        border: none;
+        position: relative;
+    }
+
+    .stayLogInBox{
+        width: fit-content;
+        height: min-content;
+        border-radius: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-shadow: 0px 0px 5px #298CD6;
+        color: #298CD6;
+        margin-bottom: 8%;
+        right: 15%;
     }
