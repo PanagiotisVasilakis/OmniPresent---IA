@@ -25,6 +25,7 @@ export class InsideAppComponent implements OnInit{
   searchForm = true;
   navForm=true;
   displayRoutes=true;
+  showDiv = false;
   latholder1:number = 0.000000;
   lonholder1:number = 0.000000;
   latholder2:number = 0.000000;
@@ -102,7 +103,7 @@ export class InsideAppComponent implements OnInit{
 
     setTimeout(() => {
       this.mymap.invalidateSize();
-    }, 200);
+    }, 500);
 
 
     //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
@@ -150,7 +151,7 @@ export class InsideAppComponent implements OnInit{
             input2, 
             '7ab20422eadd4008be20a8274432337d', 
             <GeocoderAutocompleteOptions>{ 
-              language: 'el',  
+              language: 'en',  
               types: ['locality'], 
               allowNonVerifiedHouseNumber: true,
               allowNonVerifiedStreet: true,
@@ -245,6 +246,7 @@ export class InsideAppComponent implements OnInit{
   }
   
   async navigatebutton() {
+    this.showDiv = !this.showDiv;
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details,route_details&apiKey=${this.myAPIKey}
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}
     this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
@@ -271,6 +273,8 @@ export class InsideAppComponent implements OnInit{
       // Handle the error if no route is found
       console.error('No route found');
     }
+
+  
   }
 
   // Define a function to watch the position updates from Capacitor Geolocation Plugin
@@ -354,13 +358,17 @@ showDistanceAndBearing(distance: number, bearing: number) {
   const bearingElement = document.getElementById('bearing') as HTMLElement;
   const remainingDistanceElement = document.getElementById('remaining-distance') as HTMLElement;
 
-  distanceElement.textContent = `Distance to next instruction: ${distance.toFixed(2)} meters`;
-  bearingElement.textContent = `Bearing: ${bearing.toFixed(2)} degrees`;
+  const distanceMessage: any = `Distance to next instruction: ${distance.toFixed(2)} meters`;
+  const bearingMessage:any = `Bearing: ${bearing.toFixed(2)} degrees`;
+
+  distanceElement.textContent = distanceMessage.text;
+  bearingElement.textContent = bearingMessage.text;
 
   if (this.route && this.route.properties && this.route.properties.distance) {
     const totalDistance = this.route.properties.distance;
     const remainingDistance = totalDistance - distance;
-    remainingDistanceElement.textContent = `Remaining distance: ${remainingDistance.toFixed(2)} meters`;
+    const remainingDistanceMessage: any = `Remaining distance: ${remainingDistance.toFixed(2)} meters`;
+    remainingDistanceElement.textContent = remainingDistanceMessage.text;
   }
 }
 
@@ -474,6 +482,21 @@ showDistanceAndBearing(distance: number, bearing: number) {
       button.style.display = "none";
       button.click();
     }
+
+     // Remove the instruction element
+      const instructionElement = document.getElementById('instruction');
+      if (instructionElement) {
+        instructionElement.remove();
+      }
+
+      // Remove the distance element
+      const distanceElement = document.getElementById('distance');
+      if (distanceElement) {
+        distanceElement.remove();
+      }
+
+      // Hide the ng-container element
+      this.showDiv = false;
   }
 
   async sendEmergencySMS() {

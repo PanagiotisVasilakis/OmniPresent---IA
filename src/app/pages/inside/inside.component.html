@@ -26,31 +26,17 @@
           </ion-button>
         </div>
 
-        <!-- <div *ngIf="navigatebutton" class="ionicardforSavedRoutes">
-            <ion-card class="instructions-card" *ngIf="showInstructions">
-              <ion-card-header>
-                Turn-by-Turn Instructions
-              </ion-card-header>
-              <ion-card-content>
-                <ion-list lines="none">
-                  <ion-item *ngFor="let instruction of instructions">
-                    {{ instruction }}
-                  </ion-item>
-                </ion-list>
-              </ion-card-content>
-            </ion-card>
-          <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button>
-        </div> -->
-        <div>
-        <ion-card class="ionicardforSavedRoutes">
-          <ion-card-content>
+        <ng-container *ngIf="showDiv">
+          <ion-card class="ionicardforSavedRoutes">
+            <ion-card-content>
               <div id="instruction"></div>
               <div id="distance"></div>
               <div id="bearing"></div>
               <div id="remaining-distance"></div>
-          </ion-card-content>
-      </ion-card>
-      </div>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+        
       <!-- <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button> -->
 
 
@@ -125,3 +111,23 @@
 
 
           
+
+
+
+
+
+        <!-- <div *ngIf="navigatebutton" class="ionicardforSavedRoutes">
+            <ion-card class="instructions-card" *ngIf="showInstructions">
+              <ion-card-header>
+                Turn-by-Turn Instructions
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list lines="none">
+                  <ion-item *ngFor="let instruction of instructions">
+                    {{ instruction }}
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button>
+        </div> -->
