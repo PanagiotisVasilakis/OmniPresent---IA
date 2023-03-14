@@ -23,10 +23,20 @@ export class LoginPage implements OnInit {
 		});
 	}
 
-	ngOnInit(){
+	async ngOnInit(){
 		if (this.authService.isAuthenticated.getValue()) {
-		  alert('You are already authenticated');
-		}
+			const alert = await this.alertController.create({
+			  header: 'Already authenticated',
+			  message: 'Είστε συνδεδεμένος!',
+			  buttons: [{
+				text: 'OK',
+				handler: () => {
+				  this.router.navigateByUrl('/inside', { replaceUrl: true });
+				}
+			  }]
+			});
+			await alert.present();
+		  }
 	  }
 	  
 

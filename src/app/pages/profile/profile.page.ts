@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import {Device, DeviceInfo} from "@capacitor/device";
 import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-profile',
@@ -21,10 +24,7 @@ export class ProfilePage implements OnInit {
   displayContacts = true;
   
 
-  constructor(
-    private authService: AuthService,
-    private sqLiteDatabaseService: SqLiteDatabaseService
-  ) {  }
+  constructor(private authService: AuthService, private sqLiteDatabaseService: SqLiteDatabaseService, private alertController: AlertController, private router: Router) {  }
 
   async saveEmergencyContact(){
         //SAVE CONTACTS BY CLICK                      
@@ -62,6 +62,20 @@ export class ProfilePage implements OnInit {
   async ngOnInit() {
     const info: DeviceInfo = await Device.getInfo();
     this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
+
+    if (!this.authService.isAuthenticated.getValue()) {
+			const alert = await this.alertController.create({
+			  header: 'Αποσυνδεδεμένος λογαριασμός',
+			  message: 'Πρέπει να συνδεθείτε στον λογαριασμό σας!',
+			  buttons: [{
+				text: 'OK',
+				handler: () => {
+				  this.router.navigateByUrl('/login', { replaceUrl: true });
+				}
+			  }]
+			});
+			await alert.present();
+		  }
   }
 
 }
