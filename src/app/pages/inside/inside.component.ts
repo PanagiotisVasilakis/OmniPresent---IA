@@ -289,22 +289,6 @@ selectedCategoryText = '0 Items';
       }
   }
 
-    
-  // private formatData(data: string[]) {
-  //   if (data.length === 1) {
-  //     const category = this.categories.find(category => category.value === data[0])
-  //     return category.text;
-  //   }
-  
-  //   return `${data.length} items`;
-  // }
-  
-  // fruitSelectionChanged(categories: string[]) {
-  //   this.selectedCategories = categories;
-  //   this.selectedCategoryText = this.formatData(this.selectedCategories);
-  //   this.modal.dismiss();
-  // }
-
   //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
   //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
   onCategoryChange(selectcategories: string | string[] | undefined) {
