@@ -18,14 +18,14 @@
 
 	  	</div>
 
-		<ion-item class="stayLogInBox">
+		<ion-item class="stayLogInBox" lines="full">
 			<ion-checkbox [(ngModel)]="stayLoggedIn" [ngModelOptions]="{standalone: true}"></ion-checkbox>
 			<ion-label>&nbsp;&nbsp;Stay Logged In</ion-label>
 		</ion-item>
 	  
 		<ion-button type="submit" expand="block" class="btn btn-primary" [disabled]="!credentialsForm.valid">Log in</ion-button>
 		<ion-button type="button" expand="block" class="btn btn-secondary" (click)="signUp()">Sign up!</ion-button>
-		<div style="height: 10%;"></div>
+		<div style="height: 15%;"></div>
 		<div id="menuplaceButton"> <ion-menu-button id="menuButton"></ion-menu-button></div>
 	</form>
 

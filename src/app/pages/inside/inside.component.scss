@@ -1,19 +1,39 @@
 @import "~@geoapify/geocoder-autocomplete/styles/minimal.css";
+.separate{
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  top: 5%;
+  position: fixed;
+}
 
+.autocompleteSearch ion-label {
+  width: 90%;
+}
 
- #autocomplete1{
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    font-weight: bold;
-    z-index: 9999;
-    position: fixed;
-    align-items: center;
-    top: 5%;
-    left: 15%;
-    background-color: rgba(0, 0, 0, 0.459);
-    max-height: auto;
- }
+#autocomplete1{
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  z-index: 9999;
+  position: fixed;
+  align-items: center;
+  top: 15%;
+  left: 15%;
+  background-color: rgba(0, 0, 0, 0.459);
+  max-height: auto;
+  width: 70%;
+}
+
+.separate ion-button{
+  margin: 5%;
+  --background: #121212;
+  --color: #428cff;
+  font-size: large;
+}
+
 
  #autocomplete2{
   padding: 10px;
@@ -52,10 +72,6 @@
   background-color: rgba(0, 0, 0, 0.459);
 } 
 
-
-
-
-
 .leaflet-control-layers label {
   color: #33333363;
   font-size: 14px;
@@ -76,6 +92,7 @@
   position: relative;
   width: 23%;
   height: 30px;
+  font-size: large;
 }
 
 .SetCurrentLoc{
@@ -86,6 +103,7 @@
   top: 16.5%;
   right: 5%;
   position: fixed;
+  font-size: large;
 }
 
 #displayroute{
@@ -93,6 +111,7 @@
   position: relative;
   width: 23%;
   height: 30px;
+  font-size: large;
 }
 
 #deleteRoute{
@@ -100,6 +119,7 @@
   position: relative;
   width: 23%;  
   height: 30px;
+  font-size: large;
 }
 
 #navButton{
@@ -107,6 +127,7 @@
   position: relative;
   width: 23%;
   height: 30px;
+  font-size: large;
 }
 
 
@@ -261,96 +282,3 @@ ion-modal ion-toolbar {
 .ion-card-share{
   background: rgb(14 116 144);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// .geoapify-autocomplete-items {
-//   padding: 10px;
-//   border-bottom: 1px solid #f1f1f1;
-//   z-index: 9999;
-// }
-
-// .geoapify-autocomplete-items {
-//   position: absolute;
-//   top: 75px;
-//   max-height: 600px;
-//   overflow-y: scroll;
-//   background-color: white;
-//   border: 1px solid lightgray;
-//   z-index: 9999;
-//   width: 75%;
-//   left: 35px;
-//   max-height: auto;
-// }
-
-// .geoapify-autocomplete-input
-
-
-
-// #autocomplete{
-
-// }
-
-
-
-// .autocomplete{
-//   width: 67%;
-//   margin: 5px 0;
-//   padding: 5px;
-//   border-radius: 10px;
-//   box-shadow: 0px 0px 10px rgb(6, 6, 6);
-//   z-index: 9999;
-//   position: absolute;
-//   align-items: center;
-//   top: 5px;
-//   left: 46px;
-// }
-
-// #autocomplete{
-//   padding: 0px;
-//   font-size: 16px;
-//   border-radius: 10px;
-//   border: none;
-//   font-weight: bold;
-//   background-color: rgb(49, 26, 26);
-// }
-
-// .suggestions-list{
-//   top: 74px;
-//   border-radius: 5px;
-//   list-style-type:none;
-//   width: 75%;
-//   margin: 5px 0;
-//   padding: 5px;
-//   border-radius: 10px;
-//   box-shadow: 0px 0px 10px rgb(6, 6, 6);
-//   z-index: 9999;
-//   position: absolute;
-//   align-items: center;
-//   left: 32px;
-//   max-height: auto;
-//   // overflow-y: scroll;
-// }
-
-// #suggestionsContainer{
-//   padding: 16px;
-//   font-size: 14px;
-//   border-bottom: 1px solid #f2f2f2;
-//   list-style-type: none;
-//   border-bottom: none;
-// }

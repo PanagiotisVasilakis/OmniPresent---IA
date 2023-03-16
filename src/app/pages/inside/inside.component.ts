@@ -13,6 +13,7 @@ import {Device, DeviceInfo} from "@capacitor/device";
 import 'leaflet-geometryutil';
 
 
+
 @Component({
   selector: 'app-inside',
   templateUrl: 'inside.component.html',
@@ -46,12 +47,17 @@ export class InsideAppComponent implements OnInit{
   emergencyContactName: string;
   emergencyContactNumber: string;
 
-  // Define a variable to store the current position
- currentPosition: any;
- watchId:any;
 
-// Define a variable to store the current instruction index
- currentInstructionIndex: number = 0;
+  markerClusterGroup:any;
+  
+ 
+
+  // Define a variable to store the current position
+  currentPosition: any;
+  watchId:any;
+
+  // Define a variable to store the current instruction index
+  currentInstructionIndex: number = 0;
 
   constructor(
     private platform: Platform,
@@ -97,7 +103,6 @@ export class InsideAppComponent implements OnInit{
       this.mymap.invalidateSize();
     }, 500);
 
-
     //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
     //const  url = `https://api.geoapify.com/v1/routing?waypoints=${this.fromWaypoint.join(',')}|${this.toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
     //Search and autocomplete in searching results
@@ -111,7 +116,7 @@ export class InsideAppComponent implements OnInit{
           types: ['locality'], 
           allowNonVerifiedHouseNumber: true,
           allowNonVerifiedStreet: true,
-          skipDetails: true,
+          skipDetails: false,
           autoSelect: false
         }
       );
@@ -126,13 +131,51 @@ export class InsideAppComponent implements OnInit{
         console.log('Suggestions: ', suggestions);
       });
 
-      // Takes the result that the user selected and displays it in the map
-      autocomplete.on('select', (location) => {
-        console.log(location);
-        this.mymap.setView([location.properties.lat,location.properties.lon], 13);
-        L.marker([location.properties.lat, location.properties.lon]).addTo(this.mymap).bindPopup(location.properties.name).openPopup(); 
+       // Takes the result that the user selected and displays it in the map
+      autocomplete.on('select', async (location) => {
+          console.log(location);
+          this.mymap.setView([location.properties.lat,location.properties.lon], 13);
+          L.marker([location.properties.lat, location.properties.lon]).addTo(this.mymap);
+
+          // Get a reference to the filter form element and the category select element
+          const filterForm = document.querySelector('form') as HTMLElement;
+          const categorySelect = document.getElementById('category-select') as HTMLInputElement;
+
+          // Listen for the form submission event
+          filterForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent the form from submitting and reloading the page
+            
+            const selectedCategory = categorySelect.value; // Get the selected category from the select element
+            
+            // Remove any existing markers from the map
+            if (this.markerClusterGroup) {
+                  this.markerClusterGroup.clearLayers();
+            }            
+            this.onCategoryChange(selectedCategory);
+          });
+
       });
     }
+    
+
+    // const select = addEventListener('ionChange', () => {
+    //   if (this.markerGroup && this.markerGroup.clearLayers) {
+    //     this.markerGroup.clearLayers();
+    //   }
+    //   this.selectedPlaceId = '';
+    //   const filteredPlaces = placeDetailsData.features.filter((place: { properties: { [x: string]: any; }; }) => {
+    //     return place.properties['radius_500.' + this.selectedCategory];
+    //   });
+    //   filteredPlaces.forEach((place: { geometry: { coordinates: any[]; }; properties: { name: ((layer: L.Layer) => L.Content) | L.Content | L.Popup; }; }) => {
+    //     const latlng:any = [place.geometry.coordinates[1], place.geometry.coordinates[0]];
+    //     const marker = L.marker(latlng);
+    //     marker.bindPopup(place.properties.name);
+    //     marker.addTo(this.markerGroup);
+    //   });
+    // });
+    
+
+
 
 
     //Navigation
@@ -221,20 +264,105 @@ export class InsideAppComponent implements OnInit{
         }
       }
   }
+  //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
+  //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
+  onCategoryChange(category: string) {
+    const geometry = this.mymap.getBounds();
+    const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=20&apiKey=${this.myAPIKey}`;
+    this.addMarkersToMap(placesUrl, category);
+  }
+  
+  addMarkersToMap(placesUrl: string, category?: string) {
+    // Remove previous markers from the map
+    this.mymap.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        this.mymap.removeLayer(layer);
+      }
+    });
+
+    // Add new markers to the map
+    const url = category ? `${placesUrl}&categories=${category}` : placesUrl;
+    this.http.get(url).subscribe((data: any) => {
+      for (const feature of data.features) {
+        const properties = feature.properties;
+        const name = properties.name;
+        const geometry = feature.geometry;
+        const latLng = L.latLng(geometry.coordinates[1], geometry.coordinates[0]);
+        const marker = L.marker(latLng);
+        marker.bindPopup(name).addTo(this.mymap);
+        marker.addTo(this.mymap);
+      }
+    });
+  }
+
+  // async placesdetails(location: { feature: { properties: { id: any; }; }; }){
+      // // Get the place ID from the location object
+      //   const placeId = location.feature.properties.id;
+
+      //   // Make an HTTP request to the Place Details API with the place ID and features parameters
+      //   const placeDetailsUrl = `https://api.geoapify.com/v2/place-details?apiKey=${this.myAPIKey}&id=${placeId}&features=contact,website,name,description,geometry,details,radius_500.supermarket,radius_500.shopping_mall,radius_500.restaurant,radius_500.cafe,radius_500.school,radius_500.toilet,radius_500.atm,radius_500.playground,radius_500.hotel`;
+      //   const placeDetailsResponse = await fetch(placeDetailsUrl);
+      //   const placeDetailsData = await placeDetailsResponse.json();
+
+
+      //   // Get the geometry of the place from the data object
+      //     const geometry = placeDetailsData.features[0].geometry;
+
+  //         // Make an HTTP request to the Places API with the categories, conditions, filters, and other parameters
+  //         const placesUrl = `https://api.geoapify.com/v2/places?categories=catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,leisure,man_made,natural,national_park,office,parking,pet,rental,service,tourism,camping,amenity,adult,beach,building,ski,sport,public_transport,administrative,postal_code,political,low_emission_zone,populated_place,production,production.factory&conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free&filter=rect:${geometry.coordinates[0][0][0]},${geometry.coordinates[0][0][1]},${geometry.coordinates[0][2][0]},${geometry.coordinates[0][2][1]}&limit=20&apiKey=${this.myAPIKey}`;
+  //         const placesResponse = await fetch(placesUrl);
+  //         const placesData = await placesResponse.json();
+
+  //         // Get the list of places from the data object
+  //         const places = placesData.features;
+
+  //         // create a layer for the place geometry
+  //         const placeLayer = L.geoJSON(placeDetailsData.features[0].geometry);
+
+  //         // create a feature group for the markers
+  //         const markerGroup = L.featureGroup();
+
+  //         // filter the places by category
+  //         const filteredPlaces = places.filter((place: { properties: { category: string; }; }) => {
+  //           return place.properties.category === this.selectedCategory;
+  //         });
+
+  //         // create an array of markers for each place
+  //         for (let i = 0; i < filteredPlaces.length; i++) {
+  //             // get the category and properties of the place
+  //             const category = places[i].properties.category;
+  //             const properties = places[i].properties;
+
+  //             // generate an icon URL using Geoapify's Icon API
+  //             const iconUrl = `https://api.geoapify.com/v1/icon/?type=awesome&color=%23ff0000&icon=${category}&text=${properties.name}&apiKey=${this.myAPIKey}`;
+
+  //             // create a custom icon using Leaflet's Icon class
+  //             const icon = L.icon({
+  //               iconUrl: iconUrl,
+  //               iconSize: [40, 40],
+  //               iconAnchor: [20, 20],
+  //               popupAnchor: [0,-20]
+  //             });
+
+  //             // create a marker with the custom icon and add it to the feature group
+  //             const marker = L.marker(places[i].geometry.coordinates,{icon:icon});
+  //             markerGroup.addLayer(marker).addTo(this.mymap);
+  //         }
+
+  //         // add the layer and feature group to the map
+  //         this.mymap.addLayer(placeLayer);
+  //         this.mymap.addLayer(markerGroup);
+  // }
 
 
   async ngOnInit() {
     const info: DeviceInfo = await Device.getInfo();
     this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
 
-      //map initialization 
-      this.mymap = L.map('map', {
-        zoomControl: false
-      }).setView([ 38.246639, 21.734573], 11);
-   
+    //map initialization 
+    this.mymap = L.map('map', { zoomControl: false }).setView([ 38.246639, 21.734573], 11);
     this.initializeMap();
-    
-    }
+  }
 
     // Define a function to display the map
   displayMap() {
@@ -372,67 +500,6 @@ showDistanceAndBearing(distance: number, bearing: number) {
   }
 }
 
-
-// // Define a function to show the distance and bearing to the next instruction point on the screen (you can modify this according to your UI design)
-//  showDistanceAndBearing(distance: number, bearing: number) {
-//   // Find an element on the screen where you want to show the distance and bearing
-//   const distanceAndBearingElement = document.getElementById('distance-and-bearing') as HTMLElement;
-
-//   // Format the distance and bearing values to display them nicely
-//   const distanceFormatted = Math.round(distance) + ' m';
-//   const bearingFormatted = Math.round(bearing) + '°';
-
-//   // Set the text content of the element to the distance and bearing values
-//   distanceAndBearingElement.textContent = `Distance: ${distanceFormatted}, Bearing: ${bearingFormatted}`;
-// }
-
-   
-  
-    // this.http.get<any>(this.url)
-    // .subscribe(calculatedRouteGeoJSON => {
-    //   console.log(calculatedRouteGeoJSON);
-
-    //   this.route = L.geoJSON(calculatedRouteGeoJSON, {
-    //     style: (_feature) => {
-    //       return {
-    //         color: "rgba(20, 137, 255, 0.7)",
-    //         weight: 5
-    //       };
-    //     }
-    //   });
-    //   //distance and time
-    //   this.route.bindPopup((layer: { feature: { properties: { distance: any; distance_units: any; time: any; }; }; }) => {
-    //     return `${layer.feature.properties.distance} ${layer.feature.properties.distance_units}, ${layer.feature.properties.time}`})
-    //   this.route.addTo(this.mymap);
-
-      // const turnByTurns: { type: string; geometry: { type: string; coordinates: any; }; properties: { instruction: any; }; }[] = []; // collect all transitions
-      // routeResult.features.forEach((feature: { properties: { legs: any[]; }; geometry: { coordinates: { [x: string]: { [x: string]: any; }; }; }; }) => feature.properties.legs.forEach((leg: { steps: any[]; }, legIndex: string | number) => leg.steps.forEach((step: { from_index: string | number; instruction: { text: any; }; }) => {
-      //   const pointFeature = {
-      //     "type": "Feature",
-      //     "geometry": {
-      //       "type": "Point",
-      //       "coordinates": feature.geometry.coordinates[legIndex][step.from_index]
-      //     },
-      //     "properties": {
-      //       "instruction": step.instruction.text
-      //     }
-      //   }
-      //   turnByTurns.push(pointFeature);
-      // })));
-
-      // L.geoJSON({
-      //   type: "FeatureCollection",
-      //   features: turnByTurns
-      // }, {
-      //   pointToLayer: function(feature, latlng) {
-      //     return L.circleMarker(latlng, turnByTurnMarkerStyle);
-      //   }
-      // }).bindPopup((layer) => {
-      //   return `${layer.feature.properties.instruction}`
-      // }).addTo(this.mymap);
-    // });
-  
-
   async LoadSavedRoutes() {
     const result = await this.sqLiteDatabaseService.execute(
       `SELECT id, name
@@ -455,8 +522,7 @@ showDistanceAndBearing(distance: number, bearing: number) {
     );
     this.savedRoutes = this.savedRoutes.filter(route => route.id !== id);
   }
-  
-  
+ 
   
 
   deleteRoute(){
@@ -563,3 +629,12 @@ showDistanceAndBearing(distance: number, bearing: number) {
     });
   }
 }
+
+
+
+
+
+
+
+
+ 

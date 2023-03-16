@@ -10,9 +10,55 @@
 
         <form class="form-container">
 
-          <div id="autocomplete1" [hidden]="searchForm"></div>
-
-                 
+         
+          <form class="separate">
+            <div id="autocomplete1" class="separate autocompleteSearch" [hidden]="searchForm"></div>
+                  <ion-card [hidden]="searchForm" class="categoriesFilter">
+                      <ion-label>Φίλτρα Αναζήτησης&nbsp;&nbsp;</ion-label>
+                      <ion-select name="category-select" id="category-select">
+                        <ion-select-option value="catering">Κέντρα εστίασης</ion-select-option>
+                        <!-- Places of public catering: restaurants, cafes, bars, etc. -->
+                        <ion-select-option value="accommodation">Διαμονή</ion-select-option>
+                        <!-- place to stay or live like hotels -->
+                        <ion-select-option value="activity">Clubs, community centers</ion-select-option>
+                        <!-- Clubs, community centers -->
+                        <ion-select-option value="commercial">Αγορές</ion-select-option>
+                        <!-- Places where one can buy or sell things -->
+                        <ion-select-option value="education">Σχολεία && Βιβλιοθήκες</ion-select-option>
+                        <!-- Place that provides learning spaces and learning environments -->
+                        <ion-select-option value="childcare">Παιδικοί Σταθμοί</ion-select-option>
+                        <!-- Place that provides care of children service while parents are working -->
+                        <ion-select-option value="entertainment">Διασκέδαση</ion-select-option>
+                        <!-- Place that where one can spend free time with amusement -->
+                        <ion-select-option value="healthcare">Ιατρεία</ion-select-option>
+                        <!-- Places that provides healthcare services: hospitals, clinics and more -->
+                        <ion-select-option value="leisure">Χαλάρωση</ion-select-option>
+                        <!-- Places where one can relax and unwind -->
+                        <ion-select-option value="parking">Παρκινγκ</ion-select-option>
+                        <!-- Places where one can park a car -->
+                        <ion-select-option value="natural">Φύση</ion-select-option>
+                        <!-- Places where one can enjoy nature, explore natural phenomena -->
+                        <ion-select-option value="pet">Κατοικίδια</ion-select-option>
+                        <!-- Places that can be interesting for pet owners -->
+                        <ion-select-option value="rental">Ενοικίαση Οχημάτων</ion-select-option>
+                        <!-- Places where one can rent things -->
+                        <ion-select-option value="service">Υπηρεσίες</ion-select-option>
+                        <!-- Places that provide services to the public -->
+                        <ion-select-option value="tourism">Τουρισμός</ion-select-option>
+                        <!-- Places that can be interesting for tourists -->                   
+                        <ion-select-option value="ski">Σκι</ion-select-option>
+                        <!-- Infrastructure objects related to downhill skiing sport kinds -->
+                        <ion-select-option value="sport">Αθλητικές Δραστηριότητες</ion-select-option>
+                        <!-- Infrastructure objects related to different sport kinds -->
+                        <ion-select-option value="public_transport">Μέσα Μαζικής Μεταφοράς</ion-select-option>
+                        <!-- Public transport stations and stops -->
+                        </ion-select>
+                  </ion-card>
+                <ion-button type="submit" [hidden]="searchForm">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-button>
+            </form>
+         
           <div id="autocomplete2" [hidden]="navForm"></div>
           <div [hidden]="navForm"> 
               <ion-button  id="set-location-button" class="SetCurrentLoc">
@@ -54,22 +100,6 @@
               </ion-card-content>
             </ion-card>
           </ng-container>
-
-          <!-- <ng-container *ngIf="showDiv">
-            <ion-card class="ionicardforSavedRoutes">
-              <ion-card-content>
-                <ion-item style="font-weight: bold;">
-                <div id="instruction" style="font-weight: bold;"></div>
-                <div id="distance" style="font-weight: bold;"></div>
-                <div id="bearing" style="font-weight: bold;"></div>
-                <div id="remaining-distance" style="font-weight: bold;"></div>
-              </ion-item>
-              </ion-card-content>
-            </ion-card>
-          </ng-container> -->
-          
-        <!-- <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button> -->
-
 
           <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
             <ion-card>
