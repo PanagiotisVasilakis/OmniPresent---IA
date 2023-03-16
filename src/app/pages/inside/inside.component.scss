@@ -8,8 +8,16 @@
   position: fixed;
 }
 
-.autocompleteSearch ion-label {
-  width: 90%;
+.boxselcateg {
+  // width: 90%;
+  font-size: large;  
+  --padding-end: 0px;
+  --inner-padding-end: 0px;
+  --inner-padding-start: 0px;
+  --padding-start: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  border-radius: 10px;
 }
 
 #autocomplete1{
@@ -25,13 +33,6 @@
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
   width: 70%;
-}
-
-.separate ion-button{
-  margin: 5%;
-  --background: #121212;
-  --color: #428cff;
-  font-size: large;
 }
 
 

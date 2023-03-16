@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
@@ -11,6 +11,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
 import 'leaflet-geometryutil';
+import { IonModal } from '@ionic/angular';
 
 
 
@@ -20,6 +21,7 @@ import 'leaflet-geometryutil';
   styleUrls: ['inside.component.scss'],
 })
 export class InsideAppComponent implements OnInit{
+  @ViewChild('modal', { static: true }) modal!: IonModal;
   public mymap : L.Map;
   suggestions: any;
   myAPIKey = "7ab20422eadd4008be20a8274432337d";
@@ -49,7 +51,29 @@ export class InsideAppComponent implements OnInit{
 
 
   markerClusterGroup:any;
-  
+  categories: any[] = [
+    { text: 'Κέντρα εστίασης', value: 'catering' },
+    { text: 'Διαμονή', value: 'accommodation' },
+    { text: 'Clubs, community centers', value: 'activity' },
+    { text: 'Αγορές', value: 'commercial' },
+    { text: 'Σχολεία && Βιβλιοθήκες', value: 'education' },
+    { text: 'Παιδικοί Σταθμοί', value: 'childcare' },
+    { text: 'Διασκέδαση', value: 'entertainment' },
+    { text: 'Ιατρεία', value: 'healthcare' },
+    { text: 'Χαλάρωση', value: 'leisure' },
+    { text: 'Παρκινγκ', value: 'parking' },
+    { text: 'Φύση', value: 'natural' },
+    { text: 'Κατοικίδια', value: 'pet' },
+    { text: 'Ενοικίαση Οχημάτων', value: 'rental' },
+    { text: 'Υπηρεσίες', value: 'service' },
+    { text: 'Τουρισμός', value: 'tourism' },
+    { text: 'Σκι', value: 'ski' },
+    { text: 'Αθλητικές Δραστηριότητες', value: 'sport' },
+    { text: 'Μέσα Μαζικής Μεταφοράς', value: 'public_transport' },
+];
+selectedCategories: string[] = [];
+selectedCategoryText = '0 Items';
+
  
 
   // Define a variable to store the current position
@@ -139,19 +163,19 @@ export class InsideAppComponent implements OnInit{
 
           // Get a reference to the filter form element and the category select element
           const filterForm = document.querySelector('form') as HTMLElement;
-          const categorySelect = document.getElementById('category-select') as HTMLInputElement;
+          const categorySelect = document.getElementById('category-select') as HTMLElement | any;
 
           // Listen for the form submission event
           filterForm.addEventListener('submit', (event) => {
             event.preventDefault(); // Prevent the form from submitting and reloading the page
             
-            const selectedCategory = categorySelect.value; // Get the selected category from the select element
+            this.selectedCategories = categorySelect.text; // Get the selected category from the select element
             
             // Remove any existing markers from the map
             if (this.markerClusterGroup) {
                   this.markerClusterGroup.clearLayers();
             }            
-            this.onCategoryChange(selectedCategory);
+            this.onCategoryChange(this.selectedCategories);
           });
 
       });
@@ -264,15 +288,32 @@ export class InsideAppComponent implements OnInit{
         }
       }
   }
+
+    
+  // private formatData(data: string[]) {
+  //   if (data.length === 1) {
+  //     const category = this.categories.find(category => category.value === data[0])
+  //     return category.text;
+  //   }
+  
+  //   return `${data.length} items`;
+  // }
+  
+  // fruitSelectionChanged(categories: string[]) {
+  //   this.selectedCategories = categories;
+  //   this.selectedCategoryText = this.formatData(this.selectedCategories);
+  //   this.modal.dismiss();
+  // }
+
   //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
   //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
-  onCategoryChange(category: string) {
+  onCategoryChange(selectcategories: string | string[] | undefined) {
     const geometry = this.mymap.getBounds();
     const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=20&apiKey=${this.myAPIKey}`;
-    this.addMarkersToMap(placesUrl, category);
+    this.addMarkersToMap(placesUrl, selectcategories);
   }
   
-  addMarkersToMap(placesUrl: string, category?: string) {
+  addMarkersToMap(placesUrl: string, selectcategories?: string | string[] | undefined) {
     // Remove previous markers from the map
     this.mymap.eachLayer((layer) => {
       if (layer instanceof L.Marker) {
@@ -281,7 +322,7 @@ export class InsideAppComponent implements OnInit{
     });
 
     // Add new markers to the map
-    const url = category ? `${placesUrl}&categories=${category}` : placesUrl;
+    const url = selectcategories ? `${placesUrl}&categories=${selectcategories}` : placesUrl;
     this.http.get(url).subscribe((data: any) => {
       for (const feature of data.features) {
         const properties = feature.properties;
