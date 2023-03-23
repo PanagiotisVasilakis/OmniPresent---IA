@@ -16,6 +16,8 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 // import * as Sqlite from '@capacitor-community/sqlite';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+// import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+
 
 
 export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
@@ -23,7 +25,7 @@ export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
 		tokenGetter: () => {
 			return storage.get('access_token');
 		},
-		whitelistedDomains: ['192.168.2.8:4000']
+		whitelistedDomains: ['192.168.56.1:4000']
 	};
 }
 
@@ -38,6 +40,7 @@ export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
 		BrowserAnimationsModule,
     	ToastrModule.forRoot(),
 		IonicStorageModule.forRoot(),
+    	// GooglePlaceModule,
 		JwtModule.forRoot({
 			jwtOptionsProvider: {
 				provide: JWT_OPTIONS,

@@ -35,18 +35,34 @@
   width: 70%;
 }
 
+.autonavinput{
+  top: 15%;
+  margin:2%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-height: auto;
+  left: 5%;
+  width: 90%;
+}
 
- #autocomplete2{
+ #autocompletenav1{
   padding: 10px;
   // font-size: auto;
   border-radius: 10px;
   border: none;
   font-weight: bold;
-  z-index: 9999;
-  position: fixed;
-  align-items: center;
-  top: 15%;
-  left: 5%;
+  background-color: rgba(0, 0, 0, 0.459);
+  max-height: auto;
+  width: 90%;
+}
+#autocompletenav2{
+  padding: 10px;
+  // font-size: auto;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
   background-color: rgba(0, 0, 0, 0.459);
   max-height: auto;
   width: 90%;

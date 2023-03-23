@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
+import { BLE } from '@awesome-cordova-plugins/ble/ngx';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation';
 
 @NgModule({
   imports: [
@@ -15,6 +17,7 @@ import { SettingsPage } from './settings.page';
     IonicModule,
     SettingsPageRoutingModule
   ],
+  providers: [Geolocation ,BLE],
   declarations: [SettingsPage]
 })
 export class SettingsPageModule {}

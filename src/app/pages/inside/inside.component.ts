@@ -83,6 +83,9 @@ selectedCategoryText = '0 Items';
   // Define a variable to store the current instruction index
   currentInstructionIndex: number = 0;
 
+  place: string;
+  places: any[] = [];
+
   constructor(
     private platform: Platform,
     private statusBar: StatusBar,
@@ -179,86 +182,116 @@ selectedCategoryText = '0 Items';
           });
 
       });
-    }
-    
-
-    // const select = addEventListener('ionChange', () => {
-    //   if (this.markerGroup && this.markerGroup.clearLayers) {
-    //     this.markerGroup.clearLayers();
-    //   }
-    //   this.selectedPlaceId = '';
-    //   const filteredPlaces = placeDetailsData.features.filter((place: { properties: { [x: string]: any; }; }) => {
-    //     return place.properties['radius_500.' + this.selectedCategory];
-    //   });
-    //   filteredPlaces.forEach((place: { geometry: { coordinates: any[]; }; properties: { name: ((layer: L.Layer) => L.Content) | L.Content | L.Popup; }; }) => {
-    //     const latlng:any = [place.geometry.coordinates[1], place.geometry.coordinates[0]];
-    //     const marker = L.marker(latlng);
-    //     marker.bindPopup(place.properties.name);
-    //     marker.addTo(this.markerGroup);
-    //   });
-    // });
-    
 
 
+   
 
 
-    //Navigation
-      const input2 = document.getElementById("autocomplete2") as HTMLInputElement;
-      if (input2) {
-        for(let i = 0; i < 2; i++){
-          const autocomplete = new GeocoderAutocomplete(
-            input2, 
-            '7ab20422eadd4008be20a8274432337d', 
-            <GeocoderAutocompleteOptions>{ 
-              language: 'en',  
-              types: ['locality'], 
-              allowNonVerifiedHouseNumber: true,
-              allowNonVerifiedStreet: true,
-              skipDetails: true,
-              autoSelect: false
-            }
-          );
+    // let inputnav2 = document.getElementById("autocompletenav2") as HTMLElement;
+    // let inputnav1 = document.getElementById("autocompletenav1") as HTMLElement;
 
-          // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-          const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-          for (const button of closeButton) {
-            button.style.display = "none";
-          }
+    // if (inputnav2 || inputnav1) {
+    //   // for (let i = 0; i < 2; i++) {
+    //     let urlnav1 = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${inputnav1}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    //     let urlnav2 = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${inputnav2}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+        
+    //     fetch(urlnav1)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         let place = data.predictions[0];
+    //         let placeId1 = place.place_id;
+    //         let urlnav3 = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId1}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    //         fetch(urlnav3)
+    //           .then(response => response.json())
+    //           .then(data => {
+    //               this.latholder1 = data.result.geometry.location.lat;
+    //               this.lonholder1  = data.result.geometry.location.lng;
+    //               this.endL = place.description;
+    //               console.log(this.latholder1, this.lonholder1 );
+    //           });                  
+    //       },
+    //       (error: any) => {
+    //         console.log(error);
+    //       }
+    //     );
+                
+    //     fetch(urlnav2)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         let place = data.predictions[0];
+    //         let placeId2 = place.place_id;
+    //         let urlnav4 = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId2}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    //         fetch(urlnav4)
+    //           .then(response => response.json())
+    //           .then(data => {
+    //               this.latholder2 = data.result.geometry.location.lat;
+    //               this.lonholder2  = data.result.geometry.location.lng;
+    //               this.endL = place.description;
+    //               console.log(this.latholder2, this.lonholder2 );
+    //           });                  
+    //       },
+    //       (error: any) => {
+    //         console.log(error);
+    //       }
+    //     );
+
+    // //Navigation
+    //   const input2 = document.getElementById("autocomplete2") as HTMLInputElement;
+    //   if (input2) {
+    //     for(let i = 0; i < 2; i++){
+    //       const autocomplete = new GeocoderAutocomplete(
+    //         input2, 
+    //         '7ab20422eadd4008be20a8274432337d', 
+    //         <GeocoderAutocompleteOptions>{ 
+    //           language: 'en',  
+    //           types: ['locality'], 
+    //           allowNonVerifiedHouseNumber: true,
+    //           allowNonVerifiedStreet: true,
+    //           skipDetails: true,
+    //           autoSelect: false
+    //         }
+    //       );
+
+    //       // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
+    //       const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
+    //       for (const button of closeButton) {
+    //         button.style.display = "none";
+    //       }
           
-          autocomplete.on('suggestions', (suggestions) => {
-            console.log('Suggestions: ', suggestions);
-          });
+    //       autocomplete.on('suggestions', (suggestions) => {
+    //         console.log('Suggestions: ', suggestions);
+    //       });
 
-          // Takes the result that the user selected and displays it in the map
-          autocomplete.on('select', (location) => {
-            console.log(location);
+    //       // Takes the result that the user selected and displays it in the map
+    //       autocomplete.on('select', (location) => {
+    //         console.log(location);
 
-                    // Update the input2 value when the button is clicked
-          const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
+    //                 // Update the input2 value when the button is clicked
+    //       const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
 
-            if(i===0){
-              this.latholder1 = location.properties.lat;
-              this.lonholder1 = location.properties.lon;
-              this.startL = location.properties.name;
+    //         if(i===0){
+    //           this.latholder1 = location.properties.lat;
+    //           this.lonholder1 = location.properties.lon;
+    //           this.startL = location.properties.name;
 
-              setLocationButton.addEventListener("click", () => {
-                // const input2 = document.getElementById("input2")  as HTMLElement;
-                // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-                this.latholder1 = this.currentPosition.latitude;
-                this.lonholder1 = this.currentPosition.longitude;
-              });
+    //           setLocationButton.addEventListener("click", () => {
+    //             // const input2 = document.getElementById("input2")  as HTMLElement;
+    //             // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+    //             this.latholder1 = this.currentPosition.latitude;
+    //             this.lonholder1 = this.currentPosition.longitude;
+    //           });
 
-            } else if(i === 1){
-              this.latholder2 = location.properties.lat;
-              this.lonholder2 = location.properties.lon;
-              this.endL = location.properties.name;
+    //         } else if(i === 1){
+    //           this.latholder2 = location.properties.lat;
+    //           this.lonholder2 = location.properties.lon;
+    //           this.endL = location.properties.name;
 
-              setLocationButton.addEventListener("click", () => {
-                // const input2 = document.getElementById("input2")  as HTMLElement;
-                // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-                this.latholder2 = this.currentPosition.latitude;
-                this.lonholder2 = this.currentPosition.longitude;
-              });
+    //           setLocationButton.addEventListener("click", () => {
+    //             // const input2 = document.getElementById("input2")  as HTMLElement;
+    //             // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
+    //             this.latholder2 = this.currentPosition.latitude;
+    //             this.lonholder2 = this.currentPosition.longitude;
+    //           });
 
               //SAVE ROUTES BY CLICK              
               // Add this line of code to get a reference to the save button element
@@ -284,10 +317,11 @@ selectedCategoryText = '0 Items';
             // setLocationButton.addEventListener("click", () => {
             //   input.value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
             // });
-          });
+          // };
         }
-      }
-  }
+      
+  //     }
+  // }
 
   //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
   //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
@@ -402,7 +436,7 @@ selectedCategoryText = '0 Items';
     this.showDiv = !this.showDiv;
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details,route_details&apiKey=${this.myAPIKey}
     //https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}
-    this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
+    this.url = `https://api.geoapify.com/v1/routing?waypoints=${this.latholder1},${this.lonholder1}|${this.latholder2},${this.lonholder2}&lang=el&mode=walk&details=instruction_details,route_details&apiKey=${this.myAPIKey}`;
     // Fetch the response from the API
     const response = await fetch(this.url);
 
@@ -475,7 +509,7 @@ selectedCategoryText = '0 Items';
   const bearing = L.GeometryUtil.bearing(currentPositionLatLng, nextInstructionPointLatLng);
 
   // Define a threshold for showing the next instruction (in meters)
-  const threshold = 10;
+  const threshold = 0.5;
 
   // Check if the distance is less than or equal to the threshold
   if (distance <= threshold) {
@@ -651,6 +685,31 @@ showDistanceAndBearing(distance: number, bearing: number) {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+    });
+  }
+
+
+
+
+
+  onPlaceChange(event: { target: { value: any; }; }) {
+    const input = event.target;
+    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+
+    this.http.get(url).subscribe((data: any) => {
+      this.places = data.predictions;
+    });
+  }
+
+  onItemSelected(event: { place_id: any; description: string; }) {
+    const placeId = event.place_id;
+    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+
+    this.http.get(url).subscribe((data: any) => {
+      this.latholder2 = data.result.geometry.location.lat;
+      this.lonholder2 = data.result.geometry.location.lng;
+      this.endL = event.description;
+      console.log(this.latholder2, this.lonholder2);
     });
   }
 }

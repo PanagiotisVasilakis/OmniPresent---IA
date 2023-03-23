@@ -22,8 +22,20 @@
                 </ion-item>              
               </ion-list>                  
             </form>
-         
-          <div id="autocomplete2" [hidden]="navForm"></div>
+          <!-- <div class="autonavinput"  [hidden]="navForm"> -->
+            <ion-item>
+              <input type="text" [(ngModel)]="place" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)">
+            </ion-item>
+            
+            <ion-list *ngIf="places.length > 0">
+              <ion-item *ngFor="let item of places" (click)="onItemSelected(item)">
+                {{ item.description }}
+              </ion-item>
+            </ion-list>
+
+              <!-- <ion-input id="autocompletenav1" placeholder="put"></ion-input>
+              <ion-input id="autocompletenav2" placeholder="put"></ion-input> -->
+          <!-- </div> -->
           <div [hidden]="navForm"> 
               <ion-button  id="set-location-button" class="SetCurrentLoc">
                 <ion-icon slot="icon-only" name="pin-outline" style="font-size: 90%;"></ion-icon>
@@ -46,7 +58,7 @@
           </div>
 
 
-          <ng-container *ngIf="showDiv">
+          <div *ngIf="showDiv">            
             <ion-card class="ionicardforInstructionsRoutes" draggable="true">
               <ion-card-header>
                 <ion-button class="ion-button" slot="end" (click)="minimize()">-</ion-button>
@@ -55,15 +67,13 @@
               <ion-card-content>
                 <ion-item style="font-weight: bold;">
                   <div id="instruction" style="font-weight: bold;"></div>
-                </ion-item>
-                <ion-item style="font-weight: bold;">
                   <div id="distance" style="font-weight: bold;"></div>                
                   <div id="bearing" style="font-weight: bold;"></div>
                   <div id="remaining-distance" style="font-weight: bold;"></div>
                 </ion-item>
               </ion-card-content>
-            </ion-card>
-          </ng-container>
+            </ion-card>          
+          </div>
 
           <div [hidden]="displayRoutes" class="ionicardforSavedRoutes">
             <ion-card>

@@ -11,9 +11,9 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { InsideAppComponent } from './inside.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+// import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { SMS } from '@awesome-cordova-plugins/sms/ngx';
-// import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
 @NgModule({
@@ -25,9 +25,9 @@ import { SMS } from '@awesome-cordova-plugins/sms/ngx';
     InsidePageRoutingModule,
     ReactiveFormsModule,
     HttpClientModule  ],
-  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    Geolocation,
+    // Geolocation,
     SMS,
     Platform,
     StatusBar,
