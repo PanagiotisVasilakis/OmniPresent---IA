@@ -54,9 +54,9 @@
   border-radius: 10px;
   border: none;
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.459);
+  background-color: rgba(0, 0, 0, 0.674);
   max-height: auto;
-  width: 90%;
+  width: 60%;
   top: 15%;
   // margin:2%;
   z-index: 9999;
@@ -72,9 +72,9 @@
   border-radius: 10px;
   border: none;
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.459);
+  background-color: rgba(0, 0, 0, 0.674);
   max-height: auto;
-  width: 90%;
+  width: 60%;
   top: 15%;
   // margin:2%;
   z-index: 9999;
@@ -122,7 +122,7 @@
 }
 
 .saveRoute{
-  --background: #121212a9;
+  --background: #121212bb;
   position: relative;
   width: 23%;
   height: 30px;
@@ -130,18 +130,18 @@
 }
 
 .SetCurrentLoc{
-  --background: #121212a9;
-  width: 22%;
-  height: 40px;
+  --background: #121212bb;
+  width: 24%;
+  height: 50px;
   z-index: 9999;
-  top: 16.5%;
-  right: 5%;
+  top: 8%;
+  right: 13%;
   position: fixed;
   font-size: large;
 }
 
 #displayroute{
-  --background: #121212a9;
+  --background: #121212bb;
   position: relative;
   width: 23%;
   height: 30px;
@@ -149,7 +149,7 @@
 }
 
 #deleteRoute{
-  --background: #121212a9;
+  --background: #121212bb;
   position: relative;
   width: 23%;  
   height: 30px;
@@ -157,7 +157,7 @@
 }
 
 #navButton{
-  --background: #121212a9;
+  --background: #121212bb;
   position: relative;
   width: 23%;
   height: 30px;
