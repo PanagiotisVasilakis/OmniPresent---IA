@@ -29,6 +29,7 @@ export class InsideAppComponent implements OnInit{
   navForm=true;
   displayRoutes=true;
   showDiv = false;
+  placeSelected = false;
   latholder1:number = 0.000000;
   lonholder1:number = 0.000000;
   latholder2:number = 0.000000;
@@ -77,6 +78,8 @@ selectedCategoryText = '0 Items';
   // Define a variable to store the current position
   currentPosition: any;
   watchId:any;
+  // Define a variable to hold the remaining distance
+  remainingDistance: number;
 
   // Define a variable to store the current instruction index
   currentInstructionIndex: number = 0;
@@ -244,6 +247,7 @@ selectedCategoryText = '0 Items';
     this.http.get(url).subscribe((data: any) => {
       this.places = data.predictions;
       this.selectedInput = inputId; // set the selected input based on the inputId parameter
+      this.placeSelected = false; // reset the flag for place selection
     });
   }
 
@@ -281,7 +285,8 @@ selectedCategoryText = '0 Items';
                 [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
           );
       });
-      console.log(lat, lng, description, this.latholder1, this.lonholder1, this.startL, this.latholder2, this.lonholder2, this.endL);
+      this.placeSelected = true; // set the flag for place selection
+      console.log(this.latholder1, this.lonholder1, this.startL, this.latholder2, this.lonholder2, this.endL);
     });
   }
 
@@ -388,8 +393,11 @@ selectedCategoryText = '0 Items';
       this.showInstruction('You have reached your destination!');
     }
   } else {
-    // Show the distance and bearing to the next instruction point on the screen
-    this.showDistanceAndBearing(distance, bearing);
+      // Update the remaining distance variable
+      this.remainingDistance = distance;
+      
+      // Show the distance and bearing to the next instruction point on the screen
+      this.showDistanceAndBearing(distance, bearing);
   }
 }
 
@@ -403,22 +411,32 @@ selectedCategoryText = '0 Items';
 }
 
 showDistanceAndBearing(distance: number, bearing: number) {
+
   const distanceElement = document.getElementById('distance') as HTMLElement;
   const bearingElement = document.getElementById('bearing') as HTMLElement;
-  const remainingDistanceElement = document.getElementById('remaining-distance') as HTMLElement;
 
-  const distanceMessage: any = `Distance to next instruction: ${distance.toFixed(2)} meters`;
-  const bearingMessage:any = `Bearing: ${bearing.toFixed(2)} degrees`;
+  // Update the remaining distance element
+  distanceElement.innerText = this.remainingDistance.toFixed(2);
 
-  distanceElement.textContent = distanceMessage.text;
-  bearingElement.textContent = bearingMessage.text;
+  // Show the bearing element
+  bearingElement.innerText = `Bearing: ${bearing.toFixed(2)}`;
 
-  if (this.route && this.route.properties && this.route.properties.distance) {
-    const totalDistance = this.route.properties.distance;
-    const remainingDistance = totalDistance - distance;
-    const remainingDistanceMessage: any = `Remaining distance: ${remainingDistance.toFixed(2)} meters`;
-    remainingDistanceElement.textContent = remainingDistanceMessage.text;
-  }
+  // const distanceElement = document.getElementById('distance') as HTMLElement;
+  // const bearingElement = document.getElementById('bearing') as HTMLElement;
+  // const remainingDistanceElement = document.getElementById('remaining-distance') as HTMLElement;
+
+  // const distanceMessage: any = `Distance to next instruction: ${distance.toFixed(2)} meters`;
+  // const bearingMessage:any = `Bearing: ${bearing.toFixed(2)} degrees`;
+
+  // distanceElement.textContent = distanceMessage.text;
+  // bearingElement.textContent = bearingMessage.text;
+
+  // if (this.route && this.route.properties && this.route.properties.distance) {
+  //   const totalDistance = this.route.properties.distance;
+  //   const remainingDistance = totalDistance - distance;
+  //   const remainingDistanceMessage: any = `Remaining distance: ${remainingDistance.toFixed(2)} meters`;
+  //   remainingDistanceElement.textContent = remainingDistanceMessage.text;
+  // }
 }
 
   async LoadSavedRoutes() {
@@ -461,14 +479,12 @@ showDistanceAndBearing(distance: number, bearing: number) {
     this.lonholder1 = 0.000000;
     this.latholder2 = 0.000000;
     this.lonholder2 = 0.000000;
+    this.startL = '';
+    this.endL = '';
 
     // clear input field
-    // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-    const closeButton1 = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-    for (const button of closeButton1) {
-      button.style.display = "none";
-      button.click();
-    }
+    this.place1 = '';
+    this.place2 = '';
 
      // Remove the instruction element
       const instructionElement = document.getElementById('instruction');

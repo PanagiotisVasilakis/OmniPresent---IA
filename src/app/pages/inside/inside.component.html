@@ -30,7 +30,7 @@
             <div class="navigationFeatures" [hidden]="navForm"> 
               <input id="autocompletenav1" type="text" [(ngModel)]="place1" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange('place1',$event)">
               <input id="autocompletenav2" type="text" [(ngModel)]="place2" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange('place2',$event)">           
-            <ion-list *ngIf="places.length > 0">
+             <ion-list *ngIf="places.length > 0 && !placeSelected"> <!--// hide the list if a place has been selected -->
               <ion-item *ngFor="let item of places" (click)="onItemSelected(item)">
                 {{ item.description }}
               </ion-item>
@@ -56,17 +56,13 @@
 
 
           <div *ngIf="showDiv">            
-            <ion-card class="ionicardforInstructionsRoutes" draggable="true">
-              <ion-card-header>
-                <ion-button class="ion-button" slot="end" (click)="minimize()">-</ion-button>
-                <ion-button class="ion-button" slot="end" (click)="expand()">+</ion-button>
-              </ion-card-header>
+            <ion-card id="card" style="position:absolute; font-size: 120%; justify-content: center; top: 30%;  left: 2%; background-color: rgba(0, 0, 0, 0.643); max-height: auto; border-radius: 10px;  border: none; font-weight: bold; z-index: 9999; flex-direction: column; align-items: center;" ion-drag ion-resize class="ion-draggable ion-resizable">
+              <ion-card-header style="color: #ffffff;">
+                Remaining Distance:&nbsp; <span id="distance"></span> m
+             </ion-card-header>
               <ion-card-content>
                 <ion-item style="font-weight: bold;">
-                  <div id="instruction" style="font-weight: bold;"></div>
-                  <div id="distance" style="font-weight: bold;"></div>                
-                  <div id="bearing" style="font-weight: bold;"></div>
-                  <div id="remaining-distance" style="font-weight: bold;"></div>
+                  <div id="instruction" style="font-weight: bold;"></div>              
                 </ion-item>
               </ion-card-content>
             </ion-card>          
@@ -145,23 +141,3 @@
 
 
           
-
-
-
-
-
-        <!-- <div *ngIf="navigatebutton" class="ionicardforSavedRoutes">
-            <ion-card class="instructions-card" *ngIf="showInstructions">
-              <ion-card-header>
-                Turn-by-Turn Instructions
-              </ion-card-header>
-              <ion-card-content>
-                <ion-list lines="none">
-                  <ion-item *ngFor="let instruction of instructions">
-                    {{ instruction }}
-                  </ion-item>
-                </ion-list>
-              </ion-card-content>
-            </ion-card>
-          <ion-button *ngIf="!showInstructions" expand="block" (click)="showInstructions = true">Show Instructions</ion-button>
-        </div> -->
