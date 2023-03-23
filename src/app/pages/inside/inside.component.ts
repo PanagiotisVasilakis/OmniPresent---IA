@@ -260,10 +260,12 @@ selectedCategoryText = '0 Items';
           this.latholder1 = lat;
           this.lonholder1 = lng;
           this.startL = description;
+          this.place1 = description; // set the value of the input field with the selected place's description
       } else if (this.selectedInput === 'place2') {
           this.latholder2 = lat;
           this.lonholder2 = lng;
-          this.endL = description;       
+          this.endL = description;
+          this.place2 = description; // set the value of the input field with the selected place's description       
       }
 
       //SAVE ROUTES BY CLICK              
