@@ -229,6 +229,60 @@ selectedCategoryText = '0 Items';
     this.initializeMap();
   }
 
+
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // NAVIGATION
+
+
+  onPlaceChange(inputId: string,event: { target: { value: any; }; }) {
+    const input = event.target;
+    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+
+    this.http.get(url).subscribe((data: any) => {
+      this.places = data.predictions;
+      this.selectedInput = inputId; // set the selected input based on the inputId parameter
+    });
+  }
+
+  onItemSelected(event: { place_id: any; description: string; }) {
+    let placeId = event.place_id;
+    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+
+    this.http.get(url).subscribe((data: any) => {
+      let lat = data.result.geometry.location.lat;
+      let lng = data.result.geometry.location.lng;
+      let description = event.description;
+  
+      if (this.selectedInput === 'place1') {
+          this.latholder1 = lat;
+          this.lonholder1 = lng;
+          this.startL = description;
+      } else if (this.selectedInput === 'place2') {
+          this.latholder2 = lat;
+          this.lonholder2 = lng;
+          this.endL = description;       
+      }
+
+      //SAVE ROUTES BY CLICK              
+      // Add this line of code to get a reference to the save button element
+      const saveButton = document.getElementById("saveButton") as HTMLElement | any;
+              
+      // Add an event listener to the save button that calls the saveRoute function
+      saveButton.addEventListener("click", async () => {
+          const SavedRouteName = this.startL + ' - ' + this.endL;
+          await this.sqLiteDatabaseService.run(
+                `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
+                VALUES (?, ?, ?, ?, ?);`, 
+                [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
+          );
+      });
+      console.log(lat, lng, description, this.latholder1, this.lonholder1, this.startL, this.latholder2, this.lonholder2, this.endL);
+    });
+  }
+
     // Define a function to display the map
   displayMap() {
     // Create a Leaflet map object centered at the starting point of the route
@@ -429,6 +483,31 @@ showDistanceAndBearing(distance: number, bearing: number) {
       // Hide the ng-container element
       this.showDiv = false;
   }
+  
+
+  minimize() {
+    // set the height of the card content to 0
+    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
+    cardContent.style.height = '0';
+  }
+  
+  expand() {
+    // reset the height of the card content to its original value
+    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
+    cardContent.style.height = '';
+  }
+  
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+    });
+  }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // EMERGENCY
+
 
   async sendEmergencySMS() {
     let result = await this.sqLiteDatabaseService.execute("SELECT * FROM contacts");
@@ -473,76 +552,10 @@ showDistanceAndBearing(distance: number, bearing: number) {
       }
     }
   }
-  
-
-  minimize() {
-    // set the height of the card content to 0
-    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
-    cardContent.style.height = '0';
-  }
-  
-  expand() {
-    // reset the height of the card content to its original value
-    const cardContent = document.querySelector('.ionicardforSavedRoutes .card-content') as HTMLElement;
-    cardContent.style.height = '';
-  }
-  
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
-  }
 
 
 
 
-
-  onPlaceChange(inputId: string,event: { target: { value: any; }; }) {
-    const input = event.target;
-    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-
-    this.http.get(url).subscribe((data: any) => {
-      this.places = data.predictions;
-      this.selectedInput = inputId; // set the selected input based on the inputId parameter
-    });
-  }
-
-  onItemSelected(event: { place_id: any; description: string; }) {
-    let placeId = event.place_id;
-    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-
-    this.http.get(url).subscribe((data: any) => {
-      let lat = data.result.geometry.location.lat;
-      let lng = data.result.geometry.location.lng;
-      let description = event.description;
-  
-      if (this.selectedInput === 'place1') {
-          this.latholder1 = lat;
-          this.lonholder1 = lng;
-          this.startL = description;
-      } else if (this.selectedInput === 'place2') {
-          this.latholder2 = lat;
-          this.lonholder2 = lng;
-          this.endL = description;       
-      }
-
-      //SAVE ROUTES BY CLICK              
-      // Add this line of code to get a reference to the save button element
-      const saveButton = document.getElementById("saveButton") as HTMLElement | any;
-              
-      // Add an event listener to the save button that calls the saveRoute function
-      saveButton.addEventListener("click", async () => {
-          const SavedRouteName = this.startL + ' - ' + this.endL;
-          await this.sqLiteDatabaseService.run(
-                `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
-                VALUES (?, ?, ?, ?, ?);`, 
-                [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
-          );
-      });
-      console.log(lat, lng, description);
-    });
-  }
 }
 
 
