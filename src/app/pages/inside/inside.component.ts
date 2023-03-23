@@ -74,8 +74,6 @@ export class InsideAppComponent implements OnInit{
 selectedCategories: string[] = [];
 selectedCategoryText = '0 Items';
 
- 
-
   // Define a variable to store the current position
   currentPosition: any;
   watchId:any;
@@ -83,7 +81,9 @@ selectedCategoryText = '0 Items';
   // Define a variable to store the current instruction index
   currentInstructionIndex: number = 0;
 
-  place: string;
+  place1: string = '';
+  place2: string = '';
+  selectedInput: string;
   places: any[] = [];
 
   constructor(
@@ -702,15 +702,30 @@ showDistanceAndBearing(distance: number, bearing: number) {
   }
 
   onItemSelected(event: { place_id: any; description: string; }) {
-    const placeId = event.place_id;
-    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    let placeId = event.place_id;
+    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
 
     this.http.get(url).subscribe((data: any) => {
-      this.latholder2 = data.result.geometry.location.lat;
-      this.lonholder2 = data.result.geometry.location.lng;
-      this.endL = event.description;
-      console.log(this.latholder2, this.lonholder2);
+      let lat = data.result.geometry.location.lat;
+      let lng = data.result.geometry.location.lng;
+      let description = event.description;
+  
+      if (this.selectedInput === 'place1') {
+          this.latholder1 = lat;
+          this.lonholder1 = lng;
+          this.startL = description;
+      } else if (this.selectedInput === 'place2') {
+          this.latholder2 = lat;
+          this.lonholder2 = lng;
+          this.endL = description;       
+      }
+      // this.selectedInput.valueOf = description.valueOf;
+      console.log(lat, lng, description);
     });
+  }
+
+  onInputFocus(input: string) {
+    this.selectedInput = input;
   }
 }
 

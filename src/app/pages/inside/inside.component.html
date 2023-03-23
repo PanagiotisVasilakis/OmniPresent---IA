@@ -22,26 +22,25 @@
                 </ion-item>              
               </ion-list>                  
             </form>
-          <!-- <div class="autonavinput"  [hidden]="navForm"> -->
-            <ion-item>
-              <input type="text" [(ngModel)]="place" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)">
-            </ion-item>
-            
+
+
+
+
+
+          <div  [hidden]="navForm">
+              <ion-input id="autocompletenav1" type="text" [(ngModel)]="place1" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)"></ion-input>
+              <ion-input id="autocompletenav2" type="text" [(ngModel)]="place2" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)"></ion-input>            
             <ion-list *ngIf="places.length > 0">
               <ion-item *ngFor="let item of places" (click)="onItemSelected(item)">
                 {{ item.description }}
               </ion-item>
-            </ion-list>
-
-              <!-- <ion-input id="autocompletenav1" placeholder="put"></ion-input>
-              <ion-input id="autocompletenav2" placeholder="put"></ion-input> -->
-          <!-- </div> -->
+            </ion-list>      
+          </div>
           <div [hidden]="navForm"> 
               <ion-button  id="set-location-button" class="SetCurrentLoc">
                 <ion-icon slot="icon-only" name="pin-outline" style="font-size: 90%;"></ion-icon>
               </ion-button>
           </div>  
-
           <div class="navigationFeatures" [hidden]="navForm"> 
             <ion-button (click)="navigatebutton()" id="navButton">
               <ion-icon slot="icon-only" name="navigate" style="font-size: 90%;"></ion-icon>
@@ -56,6 +55,8 @@
               <ion-icon slot="icon-only" name="star" style="font-size: 90%;"></ion-icon>
             </ion-button>
           </div>
+
+
 
 
           <div *ngIf="showDiv">            
