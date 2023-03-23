@@ -182,143 +182,8 @@ selectedCategoryText = '0 Items';
           });
 
       });
-
-
-   
-
-
-    // let inputnav2 = document.getElementById("autocompletenav2") as HTMLElement;
-    // let inputnav1 = document.getElementById("autocompletenav1") as HTMLElement;
-
-    // if (inputnav2 || inputnav1) {
-    //   // for (let i = 0; i < 2; i++) {
-    //     let urlnav1 = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${inputnav1}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-    //     let urlnav2 = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${inputnav2}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-        
-    //     fetch(urlnav1)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         let place = data.predictions[0];
-    //         let placeId1 = place.place_id;
-    //         let urlnav3 = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId1}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-    //         fetch(urlnav3)
-    //           .then(response => response.json())
-    //           .then(data => {
-    //               this.latholder1 = data.result.geometry.location.lat;
-    //               this.lonholder1  = data.result.geometry.location.lng;
-    //               this.endL = place.description;
-    //               console.log(this.latholder1, this.lonholder1 );
-    //           });                  
-    //       },
-    //       (error: any) => {
-    //         console.log(error);
-    //       }
-    //     );
-                
-    //     fetch(urlnav2)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         let place = data.predictions[0];
-    //         let placeId2 = place.place_id;
-    //         let urlnav4 = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId2}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-    //         fetch(urlnav4)
-    //           .then(response => response.json())
-    //           .then(data => {
-    //               this.latholder2 = data.result.geometry.location.lat;
-    //               this.lonholder2  = data.result.geometry.location.lng;
-    //               this.endL = place.description;
-    //               console.log(this.latholder2, this.lonholder2 );
-    //           });                  
-    //       },
-    //       (error: any) => {
-    //         console.log(error);
-    //       }
-    //     );
-
-    // //Navigation
-    //   const input2 = document.getElementById("autocomplete2") as HTMLInputElement;
-    //   if (input2) {
-    //     for(let i = 0; i < 2; i++){
-    //       const autocomplete = new GeocoderAutocomplete(
-    //         input2, 
-    //         '7ab20422eadd4008be20a8274432337d', 
-    //         <GeocoderAutocompleteOptions>{ 
-    //           language: 'en',  
-    //           types: ['locality'], 
-    //           allowNonVerifiedHouseNumber: true,
-    //           allowNonVerifiedStreet: true,
-    //           skipDetails: true,
-    //           autoSelect: false
-    //         }
-    //       );
-
-    //       // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-    //       const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-    //       for (const button of closeButton) {
-    //         button.style.display = "none";
-    //       }
-          
-    //       autocomplete.on('suggestions', (suggestions) => {
-    //         console.log('Suggestions: ', suggestions);
-    //       });
-
-    //       // Takes the result that the user selected and displays it in the map
-    //       autocomplete.on('select', (location) => {
-    //         console.log(location);
-
-    //                 // Update the input2 value when the button is clicked
-    //       const setLocationButton = document.getElementById("set-location-button") as HTMLElement;
-
-    //         if(i===0){
-    //           this.latholder1 = location.properties.lat;
-    //           this.lonholder1 = location.properties.lon;
-    //           this.startL = location.properties.name;
-
-    //           setLocationButton.addEventListener("click", () => {
-    //             // const input2 = document.getElementById("input2")  as HTMLElement;
-    //             // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-    //             this.latholder1 = this.currentPosition.latitude;
-    //             this.lonholder1 = this.currentPosition.longitude;
-    //           });
-
-    //         } else if(i === 1){
-    //           this.latholder2 = location.properties.lat;
-    //           this.lonholder2 = location.properties.lon;
-    //           this.endL = location.properties.name;
-
-    //           setLocationButton.addEventListener("click", () => {
-    //             // const input2 = document.getElementById("input2")  as HTMLElement;
-    //             // (input2 as HTMLElement | any).value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-    //             this.latholder2 = this.currentPosition.latitude;
-    //             this.lonholder2 = this.currentPosition.longitude;
-    //           });
-
-              //SAVE ROUTES BY CLICK              
-              // Add this line of code to get a reference to the save button element
-              const saveButton = document.getElementById("saveButton") as HTMLElement | any;
-              
-              // Add an event listener to the save button that calls the saveRoute function
-              saveButton.addEventListener("click", async () => {
-                const SavedRouteName = this.startL + ' - ' + this.endL;
-                await this.sqLiteDatabaseService.run(
-                  `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
-                  VALUES (?, ?, ?, ?, ?);`, 
-                  [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
-                );
-              });
-            }                    
-            // // Get a reference to the input element for this loop iteration
-            // const input = document.getElementById(`autocomplete${i + 1}`) as HTMLInputElement;
-
-            // // Get a reference to the button element for this loop iteration
-            // const setLocationButton = document.getElementById(`set-location-button-${i + 1}`) as HTMLElement;
-
-            // // Add an event listener to the button that sets the input value to the current position
-            // setLocationButton.addEventListener("click", () => {
-            //   input.value = `${this.currentPosition.latitude}, ${this.currentPosition.longitude}`;
-            // });
-          // };
-        }
+    }                    
+  }
       
   //     }
   // }
@@ -353,65 +218,6 @@ selectedCategoryText = '0 Items';
       }
     });
   }
-
-  // async placesdetails(location: { feature: { properties: { id: any; }; }; }){
-      // // Get the place ID from the location object
-      //   const placeId = location.feature.properties.id;
-
-      //   // Make an HTTP request to the Place Details API with the place ID and features parameters
-      //   const placeDetailsUrl = `https://api.geoapify.com/v2/place-details?apiKey=${this.myAPIKey}&id=${placeId}&features=contact,website,name,description,geometry,details,radius_500.supermarket,radius_500.shopping_mall,radius_500.restaurant,radius_500.cafe,radius_500.school,radius_500.toilet,radius_500.atm,radius_500.playground,radius_500.hotel`;
-      //   const placeDetailsResponse = await fetch(placeDetailsUrl);
-      //   const placeDetailsData = await placeDetailsResponse.json();
-
-
-      //   // Get the geometry of the place from the data object
-      //     const geometry = placeDetailsData.features[0].geometry;
-
-  //         // Make an HTTP request to the Places API with the categories, conditions, filters, and other parameters
-  //         const placesUrl = `https://api.geoapify.com/v2/places?categories=catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,leisure,man_made,natural,national_park,office,parking,pet,rental,service,tourism,camping,amenity,adult,beach,building,ski,sport,public_transport,administrative,postal_code,political,low_emission_zone,populated_place,production,production.factory&conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free&filter=rect:${geometry.coordinates[0][0][0]},${geometry.coordinates[0][0][1]},${geometry.coordinates[0][2][0]},${geometry.coordinates[0][2][1]}&limit=20&apiKey=${this.myAPIKey}`;
-  //         const placesResponse = await fetch(placesUrl);
-  //         const placesData = await placesResponse.json();
-
-  //         // Get the list of places from the data object
-  //         const places = placesData.features;
-
-  //         // create a layer for the place geometry
-  //         const placeLayer = L.geoJSON(placeDetailsData.features[0].geometry);
-
-  //         // create a feature group for the markers
-  //         const markerGroup = L.featureGroup();
-
-  //         // filter the places by category
-  //         const filteredPlaces = places.filter((place: { properties: { category: string; }; }) => {
-  //           return place.properties.category === this.selectedCategory;
-  //         });
-
-  //         // create an array of markers for each place
-  //         for (let i = 0; i < filteredPlaces.length; i++) {
-  //             // get the category and properties of the place
-  //             const category = places[i].properties.category;
-  //             const properties = places[i].properties;
-
-  //             // generate an icon URL using Geoapify's Icon API
-  //             const iconUrl = `https://api.geoapify.com/v1/icon/?type=awesome&color=%23ff0000&icon=${category}&text=${properties.name}&apiKey=${this.myAPIKey}`;
-
-  //             // create a custom icon using Leaflet's Icon class
-  //             const icon = L.icon({
-  //               iconUrl: iconUrl,
-  //               iconSize: [40, 40],
-  //               iconAnchor: [20, 20],
-  //               popupAnchor: [0,-20]
-  //             });
-
-  //             // create a marker with the custom icon and add it to the feature group
-  //             const marker = L.marker(places[i].geometry.coordinates,{icon:icon});
-  //             markerGroup.addLayer(marker).addTo(this.mymap);
-  //         }
-
-  //         // add the layer and feature group to the map
-  //         this.mymap.addLayer(placeLayer);
-  //         this.mymap.addLayer(markerGroup);
-  // }
 
 
   async ngOnInit() {
@@ -692,12 +498,13 @@ showDistanceAndBearing(distance: number, bearing: number) {
 
 
 
-  onPlaceChange(event: { target: { value: any; }; }) {
+  onPlaceChange(inputId: string,event: { target: { value: any; }; }) {
     const input = event.target;
     const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
 
     this.http.get(url).subscribe((data: any) => {
       this.places = data.predictions;
+      this.selectedInput = inputId; // set the selected input based on the inputId parameter
     });
   }
 
@@ -719,13 +526,22 @@ showDistanceAndBearing(distance: number, bearing: number) {
           this.lonholder2 = lng;
           this.endL = description;       
       }
-      // this.selectedInput.valueOf = description.valueOf;
+
+      //SAVE ROUTES BY CLICK              
+      // Add this line of code to get a reference to the save button element
+      const saveButton = document.getElementById("saveButton") as HTMLElement | any;
+              
+      // Add an event listener to the save button that calls the saveRoute function
+      saveButton.addEventListener("click", async () => {
+          const SavedRouteName = this.startL + ' - ' + this.endL;
+          await this.sqLiteDatabaseService.run(
+                `INSERT INTO places (name, latitudeFirst, longitudeFirst, latitudeSecond, longitudeSecond)
+                VALUES (?, ?, ?, ?, ?);`, 
+                [SavedRouteName, this.latholder1, this.lonholder1, this.latholder2, this.lonholder2]
+          );
+      });
       console.log(lat, lng, description);
     });
-  }
-
-  onInputFocus(input: string) {
-    this.selectedInput = input;
   }
 }
 

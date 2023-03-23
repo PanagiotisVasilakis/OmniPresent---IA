@@ -28,8 +28,8 @@
 
 
             <div class="navigationFeatures" [hidden]="navForm"> 
-              <input id="autocompletenav1" type="text" [(ngModel)]="place1" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)">
-              <input id="autocompletenav2" type="text" [(ngModel)]="place2" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange($event)">           
+              <input id="autocompletenav1" type="text" [(ngModel)]="place1" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange('place1',$event)">
+              <input id="autocompletenav2" type="text" [(ngModel)]="place2" [ngModelOptions]="{standalone: true}" (input)="onPlaceChange('place2',$event)">           
             <ion-list *ngIf="places.length > 0">
               <ion-item *ngFor="let item of places" (click)="onItemSelected(item)">
                 {{ item.description }}
