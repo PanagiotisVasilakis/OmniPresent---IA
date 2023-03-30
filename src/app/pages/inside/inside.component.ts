@@ -13,7 +13,7 @@ import {Device, DeviceInfo} from "@capacitor/device";
 import 'leaflet-geometryutil';
 import { IonModal } from '@ionic/angular';
 
-
+import { Observable, catchError, map, of, tap } from 'rxjs';
 
 
 @Component({
@@ -152,6 +152,9 @@ export class InsideAppComponent implements OnInit{
     { text: 'Ζωολογικός Κήπος', value: 'zoo' }
   ];
 
+  // Declare a new property for the places Observable
+  places$: Observable<any[]>;
+
   // categories: any[] = [
   //   { text: 'Κέντρα εστίασης', value: 'catering' },
   //   { text: 'Διαμονή', value: 'accommodation' },
@@ -273,24 +276,17 @@ latLngSearchPlaces: L.LatLng;
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // SEARCH PLACES
 
-  // onSearchPlace(event: { target: { value: any; }; }) {
-  //   const input = event.target;
-  //   const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-
-  //   this.http.get(url).subscribe((data: any) => {
-  //     this.places = data.predictions;
-  //     this.placeSelected = false; // reset the flag for place selection
-  //   });
-  // }
-
-  onSearchPlace(event: { target: { value: any; }; }) {
-    const input = event.target;
-    const searchText = encodeURIComponent(input.value);
+  onSearchPlace(inputId: string,event: { target: { value: any; }; }) {
+    let input = event.target;
+    let searchText = input.value;
+    console.log(input); // Check the input value
     const apiKey = 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA';
-    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/findplacefromtext/json?input=${searchText}&inputtype=textquery&key=${apiKey}`;
+    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${searchText}&language=el&radius=5000&inputtype=textquery&key=${apiKey}`;
   
+    
     this.http.get(url).subscribe((data: any) => {
-      this.places = data.candidates;
+      this.places = data.predictions;
+      this.selectedInput = inputId; // set the selected input based on the inputId parameter
       console.log(this.places); // Add this line to check the structure of the places array
       this.placeSelected = false; // reset the flag for place selection
     });
@@ -298,7 +294,7 @@ latLngSearchPlaces: L.LatLng;
 
   onSelectedPlace(event: { place_id: any; description: string; }) {
     let placeId = event.place_id;
-    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&language=el&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
     this.http.get(url).subscribe((data: any) => {
       let lat = data.result.geometry.location.lat;
       let lng = data.result.geometry.location.lng;
@@ -343,16 +339,10 @@ latLngSearchPlaces: L.LatLng;
   onCategoryChange(selectcategories: string | string[] | undefined) {
     let radius = 5000; // search radius in meters
     let apiKey = 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA';
-    let placesUrl = `http://192.168.56.1:4000/maps-api/maps/api/place/nearbysearch/json?location=${this.latLngSearchPlaces.lat},${this.latLngSearchPlaces.lng}&radius=${radius}&key=${apiKey}`;
+    let placesUrl = `http://192.168.56.1:4000/maps-api/maps/api/place/textsearch/json?location=${this.latLngSearchPlaces.lat},${this.latLngSearchPlaces.lng}&language=el&radius=${radius}&key=${apiKey}`;
   
     this.addMarkersToMap(placesUrl, selectcategories);
   }
-  // onCategoryChange(selectcategories: string | string[] | undefined) {
-  //   // let latLng = L.latLng(lat, lng);  // latitude and longitude of the location
-  //   let radius = 5000; // search radius in meters
-  //   let placesUrl = `http://192.168.56.1:4000/maps-api/maps/api/place/findplacefromtext/json?location=${this.latLngSearchPlaces}&radius=${radius}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
-  //   this.addMarkersToMap(placesUrl, selectcategories);
-  // }
   
   addMarkersToMap(placesUrl: string, selectcategories?: string | string[] | undefined) {
     // Remove previous markers from the map
@@ -391,123 +381,6 @@ latLngSearchPlaces: L.LatLng;
     });
     this.markers = [];
   }
-  
-
-
-
-
-    //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
-    //const  url = `https://api.geoapify.com/v1/routing?waypoints=${this.fromWaypoint.join(',')}|${this.toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
-    //Search and autocomplete in searching results
-  //   const input1 = document.getElementById("autocomplete1") as HTMLInputElement;
-  //   if (input1) {
-  //     const autocomplete = new GeocoderAutocomplete(
-  //       input1, 
-  //       '7ab20422eadd4008be20a8274432337d', 
-  //       <GeocoderAutocompleteOptions>{ 
-  //         language: 'el',  
-  //         types: ['locality'], 
-  //         allowNonVerifiedHouseNumber: true,
-  //         allowNonVerifiedStreet: true,
-  //         skipDetails: false,
-  //         autoSelect: false
-  //       }
-  //     );
-
-  //     // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-  //     const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-  //     for (const button of closeButton) {
-  //        button.style.display = "none";
-  //     }
-      
-  //     autocomplete.on('suggestions', (suggestions) => {
-  //       console.log('Suggestions: ', suggestions);
-  //     });
-
-  //      // Takes the result that the user selected and displays it in the map
-  //     autocomplete.on('select', async (location) => {
-  //         console.log(location);
-  //         this.mymap.setView([location.properties.lat,location.properties.lon], 13);
-  //         L.marker([location.properties.lat, location.properties.lon]).addTo(this.mymap);
-
-  //         // Get a reference to the filter form element and the category select element
-  //         const filterCategoriesForm = document.querySelector('form') as HTMLElement;
-  //         const categorySelect = document.getElementById('category-select') as HTMLElement | any;
-
-  //         // Listen for the form submission event
-  //         filterCategoriesForm.addEventListener('submit', (event) => {
-  //           event.preventDefault(); // Prevent the form from submitting and reloading the page
-            
-  //           this.selectedCategories = categorySelect.text; // Get the selected category from the select element
-            
-  //           // Remove any existing markers from the map
-  //           if (this.markerClusterGroup) {
-  //                 this.markerClusterGroup.clearLayers();
-  //           }            
-  //           this.onCategoryChange(this.selectedCategories);
-  //         });
-
-          
-  //         // Get a reference to the filter form element and the category select element
-  //         const filterConditionsForm = document.querySelector('Conditionsform') as HTMLElement;
-  //         const ConditionSelect = document.getElementById('condition-select') as HTMLElement | any;
-          
-  //         // Listen for the form submission event
-  //         filterConditionsForm.addEventListener('submit', (event) => {
-  //              event.preventDefault(); // Prevent the form from submitting and reloading the page
-                      
-  //              this.selectedConditions = ConditionSelect.text; // Get the selected category from the select element
-                      
-  //              // Remove any existing markers from the map
-  //              if (this.markerClusterGroup) {
-  //                  this.markerClusterGroup.clearLayers();
-  //              }            
-  //             this.onConditionChange(this.selectedConditions);
-  //         });
-
-  //     });
-  //   }                    
-  // }
-      
-  //   //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
-  // //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
-  // onConditionChange(selectedConditions: string | string[] | undefined) {
-  //   const geometry = this.mymap.getBounds();
-  //   const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=500&apiKey=${this.myAPIKey}`;
-  //   this.addMarkersToMap(placesUrl, selectedConditions);
-  // }
-
-
-  // //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
-  // //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
-  // onCategoryChange(selectcategories: string | string[] | undefined) {
-  //   const geometry = this.mymap.getBounds();
-  //   const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=500&apiKey=${this.myAPIKey}`;
-  //   this.addMarkersToMap(placesUrl, selectcategories);
-  // }
-  
-  // addMarkersToMap(placesUrl: string, selectcategories?: string | string[] | undefined) {
-  //   // Remove previous markers from the map
-  //   this.mymap.eachLayer((layer) => {
-  //     if (layer instanceof L.Marker) {
-  //       this.mymap.removeLayer(layer);
-  //     }
-  //   });
-
-  //   // Add new markers to the map
-  //   const url = selectcategories ? `${placesUrl}&categories=${selectcategories}` : placesUrl;
-  //   this.http.get(url).subscribe((data: any) => {
-  //     for (const feature of data.features) {
-  //       const properties = feature.properties;
-  //       const name = properties.name;
-  //       const geometry = feature.geometry;
-  //       const latLng = L.latLng(geometry.coordinates[1], geometry.coordinates[0]);
-  //       const marker = L.marker(latLng);
-  //       marker.bindPopup(name).addTo(this.mymap);
-  //       marker.addTo(this.mymap);
-  //     }
-  //   });
-  // }
 
 
   async ngOnInit() {

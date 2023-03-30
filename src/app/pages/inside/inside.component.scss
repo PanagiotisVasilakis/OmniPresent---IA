@@ -127,6 +127,7 @@
 
 .saveRoute{
   --background: #121212bb;
+  --color: #428cff;
   position: relative;
   width: 23%;
   height: 30px;
@@ -135,17 +136,19 @@
 
 .SetCurrentLoc{
   --background: #121212bb;
+  --color: #428cff;
   width: 24%;
   height: 50px;
   z-index: 9999;
   top: 8%;
   right: 13%;
   position: fixed;
-  font-size: large;
+  font-size:x-large;
 }
 
 #displayroute{
   --background: #121212bb;
+  --color: #428cff;
   position: relative;
   width: 23%;
   height: 30px;
@@ -154,6 +157,7 @@
 
 #deleteRoute{
   --background: #121212bb;
+  --color: #428cff;
   position: relative;
   width: 23%;  
   height: 30px;
@@ -162,6 +166,7 @@
 
 #navButton{
   --background: #121212bb;
+  --color: #428cff;
   position: relative;
   width: 23%;
   height: 30px;

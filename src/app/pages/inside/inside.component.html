@@ -13,10 +13,10 @@
             
               <div class="card-content"  [hidden]="searchForm">
                 <form>                  
-                    <input class="searchinput" type="text" [(ngModel)]="searchInput" [ngModelOptions]="{standalone: true}" (input)="onSearchPlace($event)">
+                    <input class="searchinput" type="text" [(ngModel)]="searchInput" [ngModelOptions]="{standalone: true}" (input)="onSearchPlace(searchInput,$event)">
                     <ion-list *ngIf="places.length > 0 && !placeSelected"> <!--// hide the list if a place has been selected -->
-                      <ion-item (click)="onSelectedPlace(place)" *ngFor="let place of places">
-                        {{ place.name }}
+                      <ion-item (click)="onSelectedPlace(item)" *ngFor="let item of places">
+                        {{ item.description }}
                       </ion-item>
                     </ion-list>                    
                     <ion-item lines="full" class="boxselcateg">
