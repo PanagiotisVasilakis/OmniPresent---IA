@@ -6,22 +6,28 @@
 
       <ion-content>
 
-        <div id="map" style="width:100%; height: 92%;"></div>
+        <div id="map" style="width:100%; height: 91%;"></div>
 
         <form class="form-container">
 
-         
-          <form class="separate" [hidden]="searchForm">
-            <div id="autocomplete1" class="separate autocompleteSearch" ></div>
-              <ion-list [inset]="true">
-                <ion-item class="boxselcateg">
-                  <ion-label>Φίλτρα Αναζήτησης</ion-label>
-                  <ion-select id="category-select" multiple="true" [(ngModel)]="selectedCategories" [ngModelOptions]="{standalone: true}" (ionChange)="onCategoryChange(selectedCategories)">
-                    <ion-select-option *ngFor="let category of categories" [value]="category.value">{{ category.text }}</ion-select-option>
-                  </ion-select>
-                </ion-item>              
-              </ion-list>                  
-            </form>
+            
+              <div class="card-content"  [hidden]="searchForm">
+                <form>                  
+                    <input class="searchinput" type="text" [(ngModel)]="searchInput" [ngModelOptions]="{standalone: true}" (input)="onSearchPlace($event)">
+                    <ion-list *ngIf="places.length > 0 && !placeSelected"> <!--// hide the list if a place has been selected -->
+                      <ion-item (click)="onSelectedPlace(place)" *ngFor="let place of places">
+                        {{ place.name }}
+                      </ion-item>
+                    </ion-list>                    
+                    <ion-item lines="full" class="boxselcateg">
+                        <ion-label>&nbsp;Φίλτρα Αναζήτησης</ion-label>
+                        <ion-select id="category-select" multiple="true" [(ngModel)]="selectedCategories" [ngModelOptions]="{standalone: true}" (ionChange)="onCategoryChange(selectedCategories)">
+                          <ion-select-option *ngFor="let category of categories" [value]="category.value">{{ category.text }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>                                                          
+                </form>
+              </div>
+            
 
 
 

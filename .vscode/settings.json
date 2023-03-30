@@ -4,5 +4,7 @@
         "origin",
         "upstream",
         "main"
-    ]
+    ],
+    "easycode.model": "gpt-4",
+    "easycode.userEmail": "panagiotib13@gmail.com"
 }

@@ -5,13 +5,14 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 // import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
-import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
+// import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
 import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
 import { Geolocation } from '@capacitor/geolocation';
 import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
 import 'leaflet-geometryutil';
 import { IonModal } from '@ionic/angular';
+
 
 
 
@@ -53,27 +54,153 @@ export class InsideAppComponent implements OnInit{
 
   markerClusterGroup:any;
   categories: any[] = [
-    { text: 'Κέντρα εστίασης', value: 'catering' },
-    { text: 'Διαμονή', value: 'accommodation' },
-    { text: 'Clubs, community centers', value: 'activity' },
-    { text: 'Αγορές', value: 'commercial' },
-    { text: 'Σχολεία && Βιβλιοθήκες', value: 'education' },
-    { text: 'Παιδικοί Σταθμοί', value: 'childcare' },
-    { text: 'Διασκέδαση', value: 'entertainment' },
-    { text: 'Ιατρεία', value: 'healthcare' },
-    { text: 'Χαλάρωση', value: 'leisure' },
-    { text: 'Παρκινγκ', value: 'parking' },
-    { text: 'Φύση', value: 'natural' },
-    { text: 'Κατοικίδια', value: 'pet' },
-    { text: 'Ενοικίαση Οχημάτων', value: 'rental' },
-    { text: 'Υπηρεσίες', value: 'service' },
-    { text: 'Τουρισμός', value: 'tourism' },
-    { text: 'Σκι', value: 'ski' },
-    { text: 'Αθλητικές Δραστηριότητες', value: 'sport' },
-    { text: 'Μέσα Μαζικής Μεταφοράς', value: 'public_transport' },
-];
+    { text: 'Λογιστικά', value: 'accounting' },
+    { text: 'Αεροδρόμιο', value: 'airport' },
+    { text: 'Λούνα Πάρκ', value: 'amusement_park' },
+    { text: 'Ενυδρείο', value: 'aquarium' },
+    { text: 'Πινακοθήκη Τέχνης', value: 'art_gallery' },
+    { text: 'ΑΤΜ', value: 'atm' },
+    { text: 'Αρτοποιείο', value: 'bakery' },
+    { text: 'Τράπεζα', value: 'bank' },
+    { text: 'Μπαρ', value: 'bar' },
+    { text: 'Κέντρο Αισθητικής', value: 'beauty_salon' },
+    { text: 'Κατάστημα Ποδηλάτων', value: 'bicycle_store' },
+    { text: 'Βιβλιοπωλείο', value: 'book_store' },
+    { text: 'Μπόουλινγκ', value: 'bowling_alley' },
+    { text: 'Σταθμός Λεωφορείων', value: 'bus_station' },
+    { text: 'Καφετέρια', value: 'cafe' },
+    { text: 'Χώρος Κατασκήνωσης', value: 'campground' },
+    { text: 'Αντιπροσωπεία Αυτοκινήτων', value: 'car_dealer' },
+    { text: 'Ενοικίαση Αυτοκινήτου', value: 'car_rental' },
+    { text: 'Συνεργείο Αυτοκινήτων', value: 'car_repair' },
+    { text: 'Πλυντήριο Αυτοκινήτων', value: 'car_wash' },
+    { text: 'Καζίνο', value: 'casino' },
+    { text: 'Νεκροταφείο', value: 'cemetery' },
+    { text: 'Εκκλησία', value: 'church' },
+    { text: 'Δημαρχείο', value: 'city_hall' },
+    { text: 'Κατάστημα Ρούχων', value: 'clothing_store' },
+    { text: 'Κατάστημα Ευκολιών', value: 'convenience_store' },
+    { text: 'Δικαστήριο', value: 'courthouse' },
+    { text: 'Οδοντίατρος', value: 'dentist' },
+    { text: 'Πολυκατάστημα', value: 'department_store' },
+    { text: 'Γιατρός', value: 'doctor' },
+    { text: 'Φαρμακείο', value: 'drugstore' },
+    { text: 'Ηλεκτρολόγος', value: 'electrician' },
+    { text: 'Κατάστημα Ηλεκτρονικών', value: 'electronics_store' },
+    { text: 'Πρεσβεία', value: 'embassy' },
+    { text: 'Πυροσβεστικός Σταθμός', value: 'fire_station' },
+    { text: 'Ανθοπωλείο', value: 'florist' },
+    { text: 'Κηδεμονικό Ιδρυμα', value: 'funeral_home' },
+    { text: 'Κατάστημα Επίπλων', value: 'furniture_store' },
+    { text: 'Βενζινάδικο', value: 'gas_station' },
+    { text: 'Γυμναστήριο', value: 'gym' },
+    { text: 'Κομμωτήριο', value: 'hair_care' },
+    { text: 'Κατάστημα Υλικών Σπιτιού', value: 'hardware_store' },
+    { text: 'Ινδουιστικός Ναός', value: 'hindu_temple' },
+    { text: 'Κατάστημα Ειδών Σπιτιού', value: 'home_goods_store' },
+    { text: 'Νοσοκομείο', value: 'hospital' },
+    { text: 'Ασφαλιστικό Γραφείο', value: 'insurance_agency' },
+    { text: 'Κοσμηματοπωλείο', value: 'jewelry_store' },
+    { text: 'Καθαριστήριο', value: 'laundry' },
+    { text: 'Δικηγόρος', value: 'lawyer' },
+    { text: 'Βιβλιοθήκη', value: 'library' },
+    { text: 'Σταθμός Ελαφρού Σιδηρόδρομου', value: 'light_rail_station' },
+    { text: 'Κάβα', value: 'liquor_store' },
+    { text: 'Δημόσιο Γραφείο', value: 'local_government_office' },
+    { text: 'Κλειδαράς', value: 'locksmith' },
+    { text: 'Διαμονή', value: 'lodging' },
+    { text: 'Παράδοση Φαγητού', value: 'meal_delivery' },
+    { text: 'Παραλαβή Φαγητού', value: 'meal_takeaway' },
+    { text: 'Τζαμί', value: 'mosque' },
+    { text: 'Ενοικίαση Ταινιών', value: 'movie_rental' },
+    { text: 'Κινηματογράφος', value: 'movie_theater' },
+    { text: 'Εταιρεία Μετακομίσεων', value: 'moving_company' },
+    { text: 'Μουσείο', value: 'museum' },
+    { text: 'Νυχτερινό Κέντρο', value: 'night_club' },
+    { text: 'Ζωγράφος', value: 'painter' },
+    { text: 'Πάρκο', value: 'park' },
+    { text: 'Πάρκινγκ', value: 'parking' },
+    { text: 'Κατάστημα Κατοικίδιων', value: 'pet_store' },
+    { text: 'Φαρμακείο', value: 'pharmacy' },
+    { text: 'Φυσιοθεραπευτής', value: 'physiotherapist' },
+    { text: 'Υδραυλικός', value: 'plumber' },
+    { text: 'Αστυνομία', value: 'police' },
+    { text: 'Ταχυδρομείο', value: 'post_office' },
+    { text: 'Δημοτικό Σχολείο', value: 'primary_school' },
+    { text: 'Κτηματομεσιτικό Γραφείο', value: 'real_estate_agency' },
+    { text: 'Εστιατόριο', value: 'restaurant' },
+    { text: 'Κατασκευαστής Στεγανοποιήσεων', value: 'roofing_contractor' },
+    { text: 'Πάρκο Τροχόσπιτων', value: 'rv_park' },
+    { text: 'Σχολείο', value: 'school' },
+    { text: 'Δευτεροβάθμια Εκπαίδευση', value: 'secondary_school' },
+    { text: 'Κατάστημα Υποδημάτων', value: 'shoe_store' },
+    { text: 'Εμπορικό Κέντρο', value: 'shopping_mall' },
+    { text: 'Σπα', value: 'spa' },
+    { text: 'Στάδιο', value: 'stadium' },
+    { text: 'Αποθήκη', value: 'storage' },
+    { text: 'Κατάστημα', value: 'store' },
+    { text: 'Σταθμός Μετρό', value: 'subway_station' },
+    { text: 'Σούπερ Μάρκετ', value: 'supermarket' },
+    { text: 'Συναγωγή', value: 'synagogue' },
+    { text: 'Πιάτσα Ταξί', value: 'taxi_stand' },
+    { text: 'Τουριστικό Αξιοθέατο', value: 'tourist_attraction' },
+    { text: 'Σιδηροδρομικός Σταθμός', value: 'train_station' },
+    { text: 'Σταθμός Μεταφοράς', value: 'transit_station' },
+    { text: 'Ταξιδιωτικό Γραφείο', value: 'travel_agency' },
+    { text: 'Πανεπιστήμιο', value: 'university' },
+    { text: 'Κτηνιατρική Φροντίδα', value: 'veterinary_care' },
+    { text: 'Ζωολογικός Κήπος', value: 'zoo' }
+  ];
+
+  // categories: any[] = [
+  //   { text: 'Κέντρα εστίασης', value: 'catering' },
+  //   { text: 'Διαμονή', value: 'accommodation' },
+  //   { text: 'Clubs, community centers', value: 'activity' },
+  //   { text: 'Αγορές', value: 'commercial' },
+  //   { text: 'Σχολεία && Βιβλιοθήκες', value: 'education' },
+  //   { text: 'Παιδικοί Σταθμοί', value: 'childcare' },
+  //   { text: 'Διασκέδαση', value: 'entertainment' },
+  //   { text: 'Ιατρεία', value: 'healthcare' },
+  //   { text: 'Χαλάρωση', value: 'leisure' },
+  //   { text: 'Παρκινγκ', value: 'parking' },
+  //   { text: 'Φύση', value: 'natural' },
+  //   { text: 'Κατοικίδια', value: 'pet' },
+  //   { text: 'Ενοικίαση Οχημάτων', value: 'rental' },
+  //   { text: 'Υπηρεσίες', value: 'service' },
+  //   { text: 'Τουρισμός', value: 'tourism' },
+  //   { text: 'Σκι', value: 'ski' },
+  //   { text: 'Αθλητικές Δραστηριότητες', value: 'sport' },
+  //   { text: 'Μέσα Μαζικής Μεταφοράς', value: 'public_transport' },
+  // ];
+
+  // conditions: any[] = [
+  //   { text: 'Internet Access', value: 'internet_access' },
+  //   { text: 'Wheelchair Accessible', value: 'wheelchair' },
+  //   { text: 'Dogs Allowed', value: 'dogs' },
+  //   { text: 'Access', value: 'access' },
+  //   { text: 'Yes Access', value: 'access.yes' },
+  //   { text: 'Not Specified Access', value: 'access.not_specified' },
+  //   { text: 'Limited Access', value: 'access_limited' },
+  //   { text: 'Vegetarian', value: 'vegetarian' },
+  //   { text: 'Vegan', value: 'vegan' },
+  //   { text: 'Organic', value: 'organic' }
+  // ];
+
 selectedCategories: string[] = [];
 selectedCategoryText = '0 Items';
+// selectedConditions: string[]= [];
+// selectedConditionsText = '0 Items';
+placesService: any;
+markers: any[] = [];
+searchInput: string;
+latLngSearchPlaces: L.LatLng;
+
+
+
+
+
+
+
 
   // Define a variable to store the current position
   currentPosition: any;
@@ -104,24 +231,32 @@ selectedCategoryText = '0 Items';
   }
 
   private initializeMap() {
-    //osm layer
-    let osm = L.tileLayer('https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=7ab20422eadd4008be20a8274432337d', {
-      id: 'osm-bright'
+    let  darkMapLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=mt&x={x}&y={y}&z={z}',{
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+      });
+      
+      let satelliteMapLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+      });
+
+      let googleMapsLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
     });
 
-    //Dark Map
-    let darkMap = L.tileLayer('https://maps.geoapify.com/v1/tile/dark-matter-yellow-roads/{z}/{x}/{y}.png?apiKey=7ab20422eadd4008be20a8274432337d', {
-       id: 'osm-bright'
-    });
+    this.mymap = L.map('map',{ zoomControl: false, layers: [googleMapsLayer] }).setView([ 38.246639, 21.734573], 11);
 
     //Layer Controller
     let baseMaps = {
-      "Omni Map": osm,
-      "Dark Mode": darkMap
+      "Omni Map": googleMapsLayer,
+      "Satellite": satelliteMapLayer,
+      "Dark Mode": darkMapLayer      
     };
 
     //deafault map
-    osm.addTo(this.mymap);
+    // googleMapsLayer.addTo(this.mymap);
     let controlLayers = new L.Control.Layers(baseMaps).addTo(this.mymap);
     controlLayers.setPosition('bottomright');
     // this.mymap.zoomControl.setPosition('topright');
@@ -132,72 +267,92 @@ selectedCategoryText = '0 Items';
     setTimeout(() => {
       this.mymap.invalidateSize();
     }, 500);
-
-    //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
-    //const  url = `https://api.geoapify.com/v1/routing?waypoints=${this.fromWaypoint.join(',')}|${this.toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
-    //Search and autocomplete in searching results
-    const input1 = document.getElementById("autocomplete1") as HTMLInputElement;
-    if (input1) {
-      const autocomplete = new GeocoderAutocomplete(
-        input1, 
-        '7ab20422eadd4008be20a8274432337d', 
-        <GeocoderAutocompleteOptions>{ 
-          language: 'en',  
-          types: ['locality'], 
-          allowNonVerifiedHouseNumber: true,
-          allowNonVerifiedStreet: true,
-          skipDetails: false,
-          autoSelect: false
-        }
-      );
-
-      // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
-      const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
-      for (const button of closeButton) {
-         button.style.display = "none";
-      }
-      
-      autocomplete.on('suggestions', (suggestions) => {
-        console.log('Suggestions: ', suggestions);
-      });
-
-       // Takes the result that the user selected and displays it in the map
-      autocomplete.on('select', async (location) => {
-          console.log(location);
-          this.mymap.setView([location.properties.lat,location.properties.lon], 13);
-          L.marker([location.properties.lat, location.properties.lon]).addTo(this.mymap);
-
-          // Get a reference to the filter form element and the category select element
-          const filterForm = document.querySelector('form') as HTMLElement;
-          const categorySelect = document.getElementById('category-select') as HTMLElement | any;
-
-          // Listen for the form submission event
-          filterForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent the form from submitting and reloading the page
-            
-            this.selectedCategories = categorySelect.text; // Get the selected category from the select element
-            
-            // Remove any existing markers from the map
-            if (this.markerClusterGroup) {
-                  this.markerClusterGroup.clearLayers();
-            }            
-            this.onCategoryChange(this.selectedCategories);
-          });
-
-      });
-    }                    
   }
-      
-  //     }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // SEARCH PLACES
+
+  // onSearchPlace(event: { target: { value: any; }; }) {
+  //   const input = event.target;
+  //   const url = `http://192.168.56.1:4000/maps-api/maps/api/place/autocomplete/json?input=${input.value}&types=geocode&language=us&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+
+  //   this.http.get(url).subscribe((data: any) => {
+  //     this.places = data.predictions;
+  //     this.placeSelected = false; // reset the flag for place selection
+  //   });
   // }
 
-  //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
-  //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
+  onSearchPlace(event: { target: { value: any; }; }) {
+    const input = event.target;
+    const searchText = encodeURIComponent(input.value);
+    const apiKey = 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA';
+    const url = `http://192.168.56.1:4000/maps-api/maps/api/place/findplacefromtext/json?input=${searchText}&inputtype=textquery&key=${apiKey}`;
+  
+    this.http.get(url).subscribe((data: any) => {
+      this.places = data.candidates;
+      console.log(this.places); // Add this line to check the structure of the places array
+      this.placeSelected = false; // reset the flag for place selection
+    });
+  }
+
+  onSelectedPlace(event: { place_id: any; description: string; }) {
+    let placeId = event.place_id;
+    let url = `http://192.168.56.1:4000/maps-api/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+    this.http.get(url).subscribe((data: any) => {
+      let lat = data.result.geometry.location.lat;
+      let lng = data.result.geometry.location.lng;
+      let description = event.description;
+
+       // Add marker to the map
+      this.latLngSearchPlaces = L.latLng(lat, lng);
+      let marker = new L.Marker(this.latLngSearchPlaces);
+      // Create custom popup content
+      let popupContent = `<h2>${description}</h2><p></p>`; 
+      marker.bindPopup(popupContent).addTo(this.mymap);
+      marker.addTo(this.mymap);
+      this.searchInput = description;
+  
+      // Center map on the selected place
+      this.mymap.setView([lat, lng], 13);
+  
+      // Save marker for future use
+      this.markers.push(marker);
+
+      this.placeSelected = true; // set the flag for place selection
+      
+      // Get a reference to the filter form element and the category select element
+      const filterCategoriesForm = document.querySelector('form') as HTMLElement;
+      const categorySelect = document.getElementById('category-select') as HTMLElement | any;
+       
+      // Listen for the form submission event
+      filterCategoriesForm.addEventListener('submit', (event) => {
+          event.preventDefault(); // Prevent the form from submitting and reloading the page
+                      
+          this.selectedCategories = categorySelect.text; // Get the selected category from the select element
+                      
+          // Remove any existing markers from the map
+          if (this.markerClusterGroup) {
+                this.markerClusterGroup.clearLayers();
+          }            
+          this.onCategoryChange(this.selectedCategories);
+      });
+    });
+  }
+
   onCategoryChange(selectcategories: string | string[] | undefined) {
-    const geometry = this.mymap.getBounds();
-    const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=20&apiKey=${this.myAPIKey}`;
+    let radius = 5000; // search radius in meters
+    let apiKey = 'AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA';
+    let placesUrl = `http://192.168.56.1:4000/maps-api/maps/api/place/nearbysearch/json?location=${this.latLngSearchPlaces.lat},${this.latLngSearchPlaces.lng}&radius=${radius}&key=${apiKey}`;
+  
     this.addMarkersToMap(placesUrl, selectcategories);
   }
+  // onCategoryChange(selectcategories: string | string[] | undefined) {
+  //   // let latLng = L.latLng(lat, lng);  // latitude and longitude of the location
+  //   let radius = 5000; // search radius in meters
+  //   let placesUrl = `http://192.168.56.1:4000/maps-api/maps/api/place/findplacefromtext/json?location=${this.latLngSearchPlaces}&radius=${radius}&key=AIzaSyDO04-2N5LAmJkQc6bhR3oA1ksUOoWCroA`;
+  //   this.addMarkersToMap(placesUrl, selectcategories);
+  // }
   
   addMarkersToMap(placesUrl: string, selectcategories?: string | string[] | undefined) {
     // Remove previous markers from the map
@@ -208,29 +363,161 @@ selectedCategoryText = '0 Items';
     });
 
     // Add new markers to the map
-    const url = selectcategories ? `${placesUrl}&categories=${selectcategories}` : placesUrl;
+    const url = selectcategories ? `${placesUrl}&type=${selectcategories}` : placesUrl;
     this.http.get(url).subscribe((data: any) => {
-      for (const feature of data.features) {
-        const properties = feature.properties;
-        const name = properties.name;
-        const geometry = feature.geometry;
-        const latLng = L.latLng(geometry.coordinates[1], geometry.coordinates[0]);
-        const marker = L.marker(latLng);
-        marker.bindPopup(name).addTo(this.mymap);
+      console.log(data); // Add this line to check the structure of the data object
+    
+      for (const result of data.results) {
+        let lat = result.geometry.location.lat;
+        let lng = result.geometry.location.lng;
+        let description = result.name;
+    
+        // Add marker to the map
+        let latLng = L.latLng(lat, lng);
+        let marker = new L.Marker(latLng);
+        // Create custom popup content
+        let popupContent = `<h2>${description}</h2><p>${selectcategories}: ${result.types.join(', ')}</p>`;
+        marker.bindPopup(popupContent).addTo(this.mymap);
         marker.addTo(this.mymap);
       }
     });
   }
+
+  
+  
+  clearMarkers() {
+    this.markers.forEach((marker: { setMap: (arg0: null) => void; }) => {
+      marker.setMap(null);
+    });
+    this.markers = [];
+  }
+  
+
+
+
+
+    //https://api.geoapify.com/v1/routing?waypoints=48.776438,9.150830|48.535490,9.2707263&format=json&mode=drive&details=instruction_details&apiKey=7ab20422eadd4008be20a8274432337d
+    //const  url = `https://api.geoapify.com/v1/routing?waypoints=${this.fromWaypoint.join(',')}|${this.toWaypoint.join(',')}&mode=drive&details=instruction_details&apiKey=${this.myAPIKey}`;
+    //Search and autocomplete in searching results
+  //   const input1 = document.getElementById("autocomplete1") as HTMLInputElement;
+  //   if (input1) {
+  //     const autocomplete = new GeocoderAutocomplete(
+  //       input1, 
+  //       '7ab20422eadd4008be20a8274432337d', 
+  //       <GeocoderAutocompleteOptions>{ 
+  //         language: 'el',  
+  //         types: ['locality'], 
+  //         allowNonVerifiedHouseNumber: true,
+  //         allowNonVerifiedStreet: true,
+  //         skipDetails: false,
+  //         autoSelect: false
+  //       }
+  //     );
+
+  //     // It has by default an X icon for erasing the user's input and i closed it for appeariance reasons
+  //     const closeButton = Array.from(document.getElementsByClassName("geoapify-close-button")) as HTMLElement[];
+  //     for (const button of closeButton) {
+  //        button.style.display = "none";
+  //     }
+      
+  //     autocomplete.on('suggestions', (suggestions) => {
+  //       console.log('Suggestions: ', suggestions);
+  //     });
+
+  //      // Takes the result that the user selected and displays it in the map
+  //     autocomplete.on('select', async (location) => {
+  //         console.log(location);
+  //         this.mymap.setView([location.properties.lat,location.properties.lon], 13);
+  //         L.marker([location.properties.lat, location.properties.lon]).addTo(this.mymap);
+
+  //         // Get a reference to the filter form element and the category select element
+  //         const filterCategoriesForm = document.querySelector('form') as HTMLElement;
+  //         const categorySelect = document.getElementById('category-select') as HTMLElement | any;
+
+  //         // Listen for the form submission event
+  //         filterCategoriesForm.addEventListener('submit', (event) => {
+  //           event.preventDefault(); // Prevent the form from submitting and reloading the page
+            
+  //           this.selectedCategories = categorySelect.text; // Get the selected category from the select element
+            
+  //           // Remove any existing markers from the map
+  //           if (this.markerClusterGroup) {
+  //                 this.markerClusterGroup.clearLayers();
+  //           }            
+  //           this.onCategoryChange(this.selectedCategories);
+  //         });
+
+          
+  //         // Get a reference to the filter form element and the category select element
+  //         const filterConditionsForm = document.querySelector('Conditionsform') as HTMLElement;
+  //         const ConditionSelect = document.getElementById('condition-select') as HTMLElement | any;
+          
+  //         // Listen for the form submission event
+  //         filterConditionsForm.addEventListener('submit', (event) => {
+  //              event.preventDefault(); // Prevent the form from submitting and reloading the page
+                      
+  //              this.selectedConditions = ConditionSelect.text; // Get the selected category from the select element
+                      
+  //              // Remove any existing markers from the map
+  //              if (this.markerClusterGroup) {
+  //                  this.markerClusterGroup.clearLayers();
+  //              }            
+  //             this.onConditionChange(this.selectedConditions);
+  //         });
+
+  //     });
+  //   }                    
+  // }
+      
+  //   //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
+  // //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
+  // onConditionChange(selectedConditions: string | string[] | undefined) {
+  //   const geometry = this.mymap.getBounds();
+  //   const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=500&apiKey=${this.myAPIKey}`;
+  //   this.addMarkersToMap(placesUrl, selectedConditions);
+  // }
+
+
+  // //catering,accommodation,activity,commercial,education,childcare,entertainment,healthcare,national_park,parking,pet,rental,service,tourism,camping,adult,beach,ski,sport,public_transport
+  // //conditions=internet_access,wheelchair,dogs,no-dogs,access,access.yes,access.not_specified,access_limited,no_access,fee,no_fee,named,vegetarian,vegan,halal,kosher,organic,gluten_free,sugar_free,egg_free,soy_free
+  // onCategoryChange(selectcategories: string | string[] | undefined) {
+  //   const geometry = this.mymap.getBounds();
+  //   const placesUrl = `https://api.geoapify.com/v2/places?&filter=rect:${geometry.getWest()},${geometry.getSouth()},${geometry.getEast()},${geometry.getNorth()}&limit=500&apiKey=${this.myAPIKey}`;
+  //   this.addMarkersToMap(placesUrl, selectcategories);
+  // }
+  
+  // addMarkersToMap(placesUrl: string, selectcategories?: string | string[] | undefined) {
+  //   // Remove previous markers from the map
+  //   this.mymap.eachLayer((layer) => {
+  //     if (layer instanceof L.Marker) {
+  //       this.mymap.removeLayer(layer);
+  //     }
+  //   });
+
+  //   // Add new markers to the map
+  //   const url = selectcategories ? `${placesUrl}&categories=${selectcategories}` : placesUrl;
+  //   this.http.get(url).subscribe((data: any) => {
+  //     for (const feature of data.features) {
+  //       const properties = feature.properties;
+  //       const name = properties.name;
+  //       const geometry = feature.geometry;
+  //       const latLng = L.latLng(geometry.coordinates[1], geometry.coordinates[0]);
+  //       const marker = L.marker(latLng);
+  //       marker.bindPopup(name).addTo(this.mymap);
+  //       marker.addTo(this.mymap);
+  //     }
+  //   });
+  // }
 
 
   async ngOnInit() {
     const info: DeviceInfo = await Device.getInfo();
     this.iosOrAndroid = (info.platform === "android" || info.platform === "ios");
 
-    //map initialization 
-    this.mymap = L.map('map', { zoomControl: false }).setView([ 38.246639, 21.734573], 11);
+    //map initialization  
     this.initializeMap();
   }
+
 
 
 
@@ -522,10 +809,11 @@ showDistanceAndBearing(distance: number, bearing: number) {
     });
   }
 
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // EMERGENCY
-
 
   async sendEmergencySMS() {
     let result = await this.sqLiteDatabaseService.execute("SELECT * FROM contacts");
