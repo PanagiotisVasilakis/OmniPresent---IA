@@ -2,18 +2,17 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
-// import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
-// import { GeocoderAutocomplete, GeocoderAutocompleteOptions } from '@geoapify/geocoder-autocomplete';
 import { SqLiteDatabaseService } from 'src/app/services/sq-lite-database.service';
-import { Geolocation } from '@capacitor/geolocation';
+import { Geolocation, Position } from '@capacitor/geolocation';
 import {SmsManager} from "@byteowls/capacitor-sms";
 import {Device, DeviceInfo} from "@capacitor/device";
 import 'leaflet-geometryutil';
 import { IonModal } from '@ionic/angular';
-
 import { Observable, catchError, map, of, tap } from 'rxjs';
+import { LocalNotifications } from '@awesome-cordova-plugins/local-notifications/ngx';
+import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 
 
 @Component({
@@ -229,6 +228,7 @@ latLngSearchPlaces: L.LatLng;
     private geolocation: Geolocation,
     // private storage: Storage
     // private routeService: RouteService
+    private ble: BLE, private localNotifications: LocalNotifications
     ) {
     this.initializeApp();
   }
@@ -730,6 +730,95 @@ showDistanceAndBearing(distance: number, bearing: number) {
         }
       }
     }
+  }
+
+
+  async getUsers(): Promise<any[]> {
+    const userUUID = Device.getId;
+    const userList: any[] = [];
+
+    try {
+      const devices = this.ble.scan([], 5);
+      // Subscribe to the Observable to start scanning and receive scan results
+      devices.subscribe((device) => {
+        if (device.advertising.localName === 'thesis' && device.id !== userUUID) {
+          userList.push({ id: device.id, name: device.name, latitude: device.latitude, longitude: device.longitude });
+        }
+      });
+      // Wait for the scanning to complete before returning the array
+      devices.subscribe();
+      console.log(`BLE scan completed. Found ${userList.length} users.`);
+      return userList;
+    } catch (error) {
+      console.error(`BLE scan error: ${JSON.stringify(error)}`);
+      throw error;
+    }
+  }
+
+   findNearbyUsers(userLatitude: number, userLongitude: number, userList: any[]): any[] {
+    const nearbyUsers: any[] = [];
+  
+    for (const user of userList) {
+      if (user.latitude && user.longitude) {
+        const distance = this.calculateDistance(userLatitude, userLongitude, user.latitude, user.longitude);
+        if (distance <= 500) { // Replace with your preferred distance threshold in meters
+          nearbyUsers.push(user);
+        }
+      }
+    }
+  
+    console.log(`Found ${nearbyUsers.length} nearby users within 1km.`);
+    return nearbyUsers;
+  }
+
+  
+   async callUser(user: any): Promise<void> {
+    console.log(`Calling user ${user.name} (${user.id}) for help.`);
+    // Replace with your own implementation that calls the user through your app or external service
+
+    try {
+      const position:Position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      
+      let userLatitude = position.coords.latitude;
+      let userLongitude = position.coords.longitude;
+      let userList = await this.getUsers();
+      let nearbyUsers = await this.findNearbyUsers(userLatitude, userLongitude, userList);
+      
+      const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${userLatitude},${userLongitude}`;
+      const message = `Hello, I need some help in ${googleMapsLink}`;
+
+      for (let nearbyUser of nearbyUsers) {
+        this.localNotifications.schedule({
+          title: 'Need Help',
+          text: message,
+          foreground: true,         
+       });
+      }    
+    } catch (error) {
+      console.error(`Error: ${JSON.stringify(error)}`);
+      throw error;
+    }
+
+  }
+
+
+   calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const earthRadius = 6371; // in kilometers
+    const dLat = this.toRadians(lat2 - lat1);
+    const dLon = this.toRadians(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c * 1000; // in meters
+    return distance;
+  }
+  
+   toRadians(degrees: number): number {
+    return degrees * Math.PI / 180;
   }
 
 

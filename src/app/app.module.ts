@@ -13,10 +13,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { Storage }  from '@ionic/storage';
 import { IonicStorageModule }  from '@ionic/storage-angular'; 
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-// import * as Sqlite from '@capacitor-community/sqlite';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-// import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+
+
 
 
 
@@ -40,7 +40,6 @@ export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
 		BrowserAnimationsModule,
     	ToastrModule.forRoot(),
 		IonicStorageModule.forRoot(),
-    	// GooglePlaceModule,
 		JwtModule.forRoot({
 			jwtOptionsProvider: {
 				provide: JWT_OPTIONS,

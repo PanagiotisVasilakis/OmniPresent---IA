@@ -6,5 +6,6 @@
         "main"
     ],
     "easycode.model": "gpt-3.5-turbo",
-    "easycode.userEmail": "panagiotib13@gmail.com"
+    "easycode.userEmail": "panagiotib13@gmail.com",
+    "CodeGPT.model": "gpt-3.5-turbo"
 }

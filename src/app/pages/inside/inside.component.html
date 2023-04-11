@@ -110,10 +110,15 @@
                     <ion-card-header style="display: flex; justify-content: center;">
                       <ion-card-title style="font-size: 114%; float: left;">Emergency Location Share</ion-card-title>
                     </ion-card-header>
-                    <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="danger" style="font-size: 90%; display: flex; justify-content: center;">
+                    <ion-button (click)="sendEmergencySMS()" class="ion-button emergency-btn" color="primary" style="font-size: 90%; display: flex; justify-content: center;">
                       &nbsp;via sms
                       <ion-icon slot="icon-only" name="mail"></ion-icon>
                     </ion-button>
+                    <ion-button (click)="callNearbyUsers()" class="ion-button emergency-btn" color="primary" style="font-size: 90%; margin-top: 5%; display: flex; justify-content: center;">
+                      &nbsp;Call Nearby
+                      <ion-icon slot="icon-only" name="bluetooth-outline"></ion-icon>
+                    </ion-button>
+                    <div style="margin-top: 10%;"></div>
                   </ion-card>
                 </div>
               </ion-content>

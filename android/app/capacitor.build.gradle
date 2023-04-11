@@ -12,18 +12,27 @@ dependencies {
     implementation project(':byteowls-capacitor-sms')
     implementation project(':capacitor-community-bluetooth-le')
     implementation project(':capacitor-community-contacts')
+    implementation project(':capacitor-community-fcm')
     implementation project(':capacitor-community-sqlite')
     implementation project(':capacitor-app')
     implementation project(':capacitor-device')
     implementation project(':capacitor-geolocation')
+    implementation project(':capacitor-google-maps')
     implementation project(':capacitor-haptics')
     implementation project(':capacitor-keyboard')
     implementation project(':capacitor-preferences')
+    implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-status-bar')
-
+    implementation "androidx.core:core:1.6.+"
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+    implementation "com.google.firebase:firebase-messaging:18.+"
+    implementation "com.wonderpush:wonderpush-android-sdk:4.3.3"
+    implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
+    implementation "com.wonderpush:wonderpush-android-sdk-fcm:1.0.5"
 }
-
+apply from: "../../node_modules/wonderpush-cordova-sdk/build-extras.gradle"
+apply from: "../../node_modules/wonderpush-cordova-sdk-fcm/build-extras.gradle"
 
 if (hasProperty('postBuildExtras')) {
   postBuildExtras()
