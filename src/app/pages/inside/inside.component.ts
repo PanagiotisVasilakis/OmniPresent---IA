@@ -789,13 +789,13 @@ showDistanceAndBearing(distance: number, bearing: number) {
       const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${userLatitude},${userLongitude}`;
       const message = `Hello, I need some help in ${googleMapsLink}`;
 
-      for (let nearbyUser of nearbyUsers) {
+      nearbyUsers.forEach((_nearbyUser: any) => {
         this.localNotifications.schedule({
           title: 'Need Help',
           text: message,
           foreground: true,         
        });
-      }    
+      })    
     } catch (error) {
       console.error(`Error: ${JSON.stringify(error)}`);
       throw error;
@@ -833,4 +833,8 @@ showDistanceAndBearing(distance: number, bearing: number) {
 
 
 
+
+function foreach(nearbyUsers: any[]) {
+  throw new Error('Function not implemented.');
+}
  
